@@ -41,7 +41,7 @@ stages:
         displayName: 'Prepare analysis on SonarCloud'
         inputs:
           SonarCloud: 'SonarCloud'
-          organization: '$(organizationName)'
+          organization: 'godeltech'
           scannerMode: 'MSBuild'
           projectKey: '$(Build.DefinitionName)'
           projectName: '$(Build.DefinitionName)'
@@ -111,7 +111,7 @@ stages:
         displayName: 'Break build on quality gate failure'
         inputs:
           SonarCloud: 'SonarCloud'
-          organization: '$(organizationName)'
+          organization: 'godeltech'
 
       - task: DotNetCoreCLI@2
         displayName: 'Pack .NET Core NuGet packages'
