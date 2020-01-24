@@ -15,8 +15,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  buildConfiguration: 'Release'
-  organizationName: godeltech
+  buildConfiguration: Release
+  sonarCloudOrganizationName: godeltech
   packDirectory: packages
 
 stages:
@@ -41,7 +41,7 @@ stages:
         displayName: 'Prepare analysis on SonarCloud'
         inputs:
           SonarCloud: 'SonarCloud'
-          organization: 'godeltech'
+          organization: '$(sonarCloudOrganizationName)'
           scannerMode: 'MSBuild'
           projectKey: '$(Build.DefinitionName)'
           projectName: '$(Build.DefinitionName)'
@@ -111,7 +111,7 @@ stages:
         displayName: 'Break build on quality gate failure'
         inputs:
           SonarCloud: 'SonarCloud'
-          organization: 'godeltech'
+          organization: '$(sonarCloudOrganizationName)'
 
       - task: DotNetCoreCLI@2
         displayName: 'Pack .NET Core NuGet packages'
@@ -148,23 +148,22 @@ stages:
                 nuGetFeedType: 'internal'
                 publishVstsFeed: '19324bbd-9baf-4407-b86d-3e7f0d145399/1574777e-9941-4b90-baa9-d9938266ac24'
 
-# temp comments
-# - stage: NuGet
-#   displayName: 'NuGet'
-#   dependsOn: Artifacts
-#   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-#   jobs:
-#     - deployment: Publish
-#       displayName: 'Publish packages'
-#       environment: 'NuGet'
-#       strategy:
-#         runOnce:
-#           deploy:
-#             steps:
-#             - task: NuGetCommand@2
-#               displayName: 'NuGet push'
-#               inputs:
-#                 command: 'push'
-#                 packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg;!$(Pipeline.Workspace)/**/*.symbols.nupkg'
-#                 nuGetFeedType: 'external'
-#                 publishFeedCredentials: 'NuGet'
+- stage: NuGet
+  displayName: 'NuGet'
+  dependsOn: Artifacts
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  jobs:
+    - deployment: Publish
+      displayName: 'Publish packages'
+      environment: 'NuGet'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: NuGetCommand@2
+              displayName: 'NuGet push'
+              inputs:
+                command: 'push'
+                packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg;!$(Pipeline.Workspace)/**/*.symbols.nupkg'
+                nuGetFeedType: 'external'
+                publishFeedCredentials: 'NuGet'
