@@ -16,6 +16,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  organizationName: godeltech
 
 stages:
 - stage: Build
@@ -26,7 +27,7 @@ stages:
     - job: Build
       displayName: 'Build'
       steps:
-      # Set Version Suffix
+
       - task: Bash@3
         displayName: 'Set Version Suffix'
         inputs:
@@ -35,12 +36,11 @@ stages:
             echo "##vso[task.setvariable variable=versionSuffix]ci-$BUILD_BUILDNUMBER"
         condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
 
-      # Build .NET Core
       - task: SonarCloudPrepare@1
         displayName: 'Prepare analysis on SonarCloud'
         inputs:
           SonarCloud: 'SonarCloud'
-          organization: 'godeltech'
+          organization: '$(organizationName)'
           scannerMode: 'MSBuild'
           projectKey: '$(Build.DefinitionName)'
           projectName: '$(Build.DefinitionName)'
@@ -110,7 +110,7 @@ stages:
         displayName: 'Break build on quality gate failure'
         inputs:
           sonarCloud: 'SonarCloud'
-          organization: 'godeltech'
+          organization: '$(organizationName)'
 
       # Pack .NET Core NuGet packages
       - task: DotNetCoreCLI@2
@@ -146,7 +146,7 @@ stages:
                 command: 'push'
                 packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg;!$(Pipeline.Workspace)/**/*.symbols.nupkg'
                 nuGetFeedType: 'internal'
-                publishVstsFeed: '19324bbd-9baf-4407-b86d-3e7f0d145399/f1c51ba0-5c70-43f8-bc9d-842fcaec53ee'
+                publishVstsFeed: '19324bbd-9baf-4407-b86d-3e7f0d145399/1574777e-9941-4b90-baa9-d9938266ac24'
 
 - stage: NuGet
   displayName: 'NuGet'
