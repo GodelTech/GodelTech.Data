@@ -110,7 +110,7 @@ stages:
       - task: sonarcloud-buildbreaker@2
         displayName: 'Break build on quality gate failure'
         inputs:
-          sonarCloud: 'SonarCloud'
+          SonarCloud: 'SonarCloud'
           organization: '$(organizationName)'
 
       - task: DotNetCoreCLI@2
