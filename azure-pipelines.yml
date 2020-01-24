@@ -17,6 +17,7 @@ pool:
 variables:
   buildConfiguration: 'Release'
   organizationName: godeltech
+  packDirectory: packages
 
 stages:
 - stage: Build
@@ -112,21 +113,20 @@ stages:
           sonarCloud: 'SonarCloud'
           organization: '$(organizationName)'
 
-      # Pack .NET Core NuGet packages
       - task: DotNetCoreCLI@2
-        displayName: 'dotnet pack'
+        displayName: 'Pack .NET Core NuGet packages'
         inputs:
           command: 'pack'
           packagesToPack: '**/*.csproj'
           buildProperties: 'VersionSuffix="$(versionSuffix)"'
-          packDirectory: '$(Build.ArtifactStagingDirectory)/packages'
+          packDirectory: '$(Build.ArtifactStagingDirectory)/$(packDirectory)'
           nobuild: true
           versioningScheme: 'off'
 
       - task: PublishPipelineArtifact@1
         displayName: 'Publish Pipeline Artifact: NuGet Packages'
         inputs:
-          path: '$(Build.ArtifactStagingDirectory)/packages'
+          path: '$(Build.ArtifactStagingDirectory)/$(packDirectory)'
           artifact: 'NuGet Packages'
 
 - stage: Artifacts
