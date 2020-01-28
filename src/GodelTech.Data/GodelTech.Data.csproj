@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>GodelTech.Data</PackageId>
-    <VersionPrefix>1.0.0-test</VersionPrefix>
+    <VersionPrefix>1.0.0-rc.1</VersionPrefix>
     <Authors>v.rodchenko</Authors>
     <Company>Godel Technologies</Company>
     <Description>Library to access data storage with Unit of Work, Repository and Entity classes.</Description>
