@@ -180,12 +180,6 @@ namespace GodelTech.Data
         void Delete(TEntity entity);
 
         /// <summary>
-        /// Deletes the specified entity by id.
-        /// </summary>
-        /// <param name="id">Id of the entity.</param>
-        void Delete(TType id);
-
-        /// <summary>
         /// Deletes range of entities by their ids.
         /// </summary>
         /// <param name="ids">List of entities ids.</param>
