@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using Xunit;
 
 namespace GodelTech.Data.Tests.Exceptions
@@ -27,6 +28,17 @@ namespace GodelTech.Data.Tests.Exceptions
             // Act & Assert
             Assert.Equal(message, dataStorageException.Message);
             Assert.IsType(exception.GetType(), dataStorageException.InnerException);
+        }
+
+        [Fact]
+        public void ShouldSerializeException()
+        {
+            // Arrange
+            var context = new StreamingContext(StreamingContextStates.File);
+
+            // Act & Assert
+            var exception = Assert.Throws<ArgumentNullException>(() => new DataStorageException(null, context));
+            Assert.Equal("Value cannot be null. (Parameter 'info')", exception.Message);
         }
     }
 }
