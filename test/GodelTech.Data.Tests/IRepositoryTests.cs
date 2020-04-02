@@ -175,21 +175,6 @@ namespace GodelTech.Data.Tests
         }
 
         [Fact]
-        public void Delete_EntityById_Success()
-        {
-            // Arrange
-            const int id = 1;
-
-            _mockRepository.Setup(m => m.Delete(It.IsAny<int>()));
-
-            // Act
-            _mockRepository.Object.Delete(id);
-
-            // Assert
-            _mockRepository.Verify(x => x.Delete(It.IsAny<int>()), Times.Once);
-        }
-
-        [Fact]
         public void Delete_EntitiesByIds_Success()
         {
             // Arrange
