@@ -31,14 +31,26 @@ namespace GodelTech.Data.Tests.Exceptions
         }
 
         [Fact]
-        public void ShouldSerializeException()
+        public void Constructor_SerializationInfo_Created()
         {
             // Arrange
+            var info = new SerializationInfo(typeof(DataStorageException), new FormatterConverter());
+            info.AddValue("ClassName", string.Empty);
+            info.AddValue("Message", string.Empty);
+            info.AddValue("InnerException", new ArgumentException());
+            info.AddValue("HelpURL", string.Empty);
+            info.AddValue("StackTraceString", string.Empty);
+            info.AddValue("RemoteStackTraceString", string.Empty);
+            info.AddValue("RemoteStackIndex", 0);
+            info.AddValue("ExceptionMethod", string.Empty);
+            info.AddValue("HResult", 1);
+            info.AddValue("Source", string.Empty);
+
             var context = new StreamingContext(StreamingContextStates.File);
+            var dataStorageException = new DataStorageException(info, context);
 
             // Act & Assert
-            var exception = Assert.Throws<ArgumentNullException>(() => new DataStorageException(null, context));
-            Assert.Equal("Value cannot be null. (Parameter 'info')", exception.Message);
+            Assert.IsType(new ArgumentException().GetType(), dataStorageException.InnerException);
         }
     }
 }
