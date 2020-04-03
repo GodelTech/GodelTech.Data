@@ -7,7 +7,7 @@ namespace GodelTech.Data
     /// </summary>
     /// <typeparam name="TType">The type of the T type.</typeparam>
     /// <seealso>
-    ///     <cref>System.IEquatable{Godel.Data.IEntity{TType}}</cref>
+    ///     <cref>System.IEquatable{GodelTech.Data.IEntity{TType}}</cref>
     /// </seealso>
     public interface IEntity<TType> : IEquatable<IEntity<TType>>
     {

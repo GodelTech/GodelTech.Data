@@ -13,6 +13,25 @@ namespace GodelTech.Data
     public static class RepositoryExtensions
     {
         /// <summary>
+        /// Gets new query parameters for filter expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the T entity.</typeparam>
+        /// <typeparam name="TType">The type of the T type.</typeparam>
+        /// <param name="filterExpression">The filter expression.</param>
+        /// <returns><cref>QueryParameters</cref>.</returns>
+        private static QueryParameters<TEntity, TType> GetQueryParameters<TEntity, TType>(Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class, IEntity<TType>
+        {
+            return new QueryParameters<TEntity, TType>
+            {
+                Filter = new FilterRule<TEntity, TType>
+                {
+                    Expression = filterExpression
+                }
+            };
+        }
+
+        /// <summary>
         /// Gets entity of type T from repository that satisfies an expression.
         /// If no entity is found, then null is returned.
         /// </summary>
@@ -25,18 +44,6 @@ namespace GodelTech.Data
             where TEntity : class, IEntity<TType>
         {
             return repository.Get(GetQueryParameters<TEntity, TType>(filterExpression));
-        }
-
-        private static QueryParameters<TEntity, TType> GetQueryParameters<TEntity, TType>(Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TType>
-        {
-            return new QueryParameters<TEntity, TType>
-            {
-                Filter = new FilterRule<TEntity, TType>
-                {
-                    Expression = filterExpression
-                }
-            };
         }
 
         /// <summary>
