@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Moq;
 using Xunit;
 
@@ -18,7 +18,7 @@ namespace GodelTech.Data.Tests
         public void Inherit_IEquatable()
         {
             // Arrange & Act & Assert
-            Assert.IsAssignableFrom<IEquatable<IEntity<int>>>(_mockEntity.Object);
+            Assert.IsAssignableFrom<IEqualityComparer<IEntity<int>>>(_mockEntity.Object);
         }
 
         [Fact]

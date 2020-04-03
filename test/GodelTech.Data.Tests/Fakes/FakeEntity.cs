@@ -8,9 +8,14 @@ namespace GodelTech.Data.Tests.Fakes
     {
         public int Id { get; set; }
 
-        public bool Equals(IEntity<int> other)
+        public bool Equals(IEntity<int> x, IEntity<int> y)
         {
             throw new Exception("Equals is fake method!");
+        }
+
+        public int GetHashCode(IEntity<int> obj)
+        {
+            throw new Exception("GetHashCode is fake method!");
         }
     }
 }
