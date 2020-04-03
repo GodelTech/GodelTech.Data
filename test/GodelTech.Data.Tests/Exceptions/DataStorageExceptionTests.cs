@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using GodelTech.Data.Tests.Fakes;
 using Xunit;
 
 namespace GodelTech.Data.Tests.Exceptions
@@ -47,7 +48,7 @@ namespace GodelTech.Data.Tests.Exceptions
             info.AddValue("Source", string.Empty);
 
             var context = new StreamingContext(StreamingContextStates.File);
-            var dataStorageException = new DataStorageException(info, context);
+            var dataStorageException = new FakeDataStorageException(info, context);
 
             // Act & Assert
             Assert.IsType(new ArgumentException().GetType(), dataStorageException.InnerException);

@@ -12,22 +12,22 @@ namespace GodelTech.Data
     public class DataStorageException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DataStorageException"/> class.
+        /// Initializes a new instance of the <see cref="Exception"></see> class with serialized data.
         /// </summary>
-        /// <param name="exception">The exception.</param>
-        public DataStorageException(Exception exception)
-            : base(exception.Message, exception)
+        /// <param name="info">The <see cref="SerializationInfo"></see>.</param>
+        /// <param name="context">The <see cref="StreamingContext"></see>.</param>
+        protected DataStorageException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
 
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Exception"></see> class with serialized data.
+        /// Initializes a new instance of the <see cref="DataStorageException"/> class.
         /// </summary>
-        /// <param name="info">The <see cref="SerializationInfo"></see>.</param>
-        /// <param name="context">The <see cref="StreamingContext"></see>.</param>
-        public DataStorageException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        /// <param name="exception">The exception.</param>
+        public DataStorageException(Exception exception)
+            : base(exception.Message, exception)
         {
 
         }
