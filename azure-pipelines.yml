@@ -56,7 +56,17 @@ stages:
           version: '3.x'
 
       - task: DotNetCoreCLI@2
-        displayName: 'dotnet restore'
+        displayName: 'dotnet restore from both Nuget and Azure Artifacts feeds'
+        condition: and(ne(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['Build.Reason'], 'PullRequest'))
+        inputs:
+          command: 'restore'
+          projects: '**/*.csproj'
+          feedsToUse: 'select'
+          vstsFeed: '19324bbd-9baf-4407-b86d-3e7f0d145399/1574777e-9941-4b90-baa9-d9938266ac24'
+
+      - task: DotNetCoreCLI@2
+        displayName: 'dotnet restore only from NuGet feed'
+        condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'PullRequest'))
         inputs:
           command: 'restore'
           projects: '**/*.csproj'
