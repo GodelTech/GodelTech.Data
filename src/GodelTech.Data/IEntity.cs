@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 
 namespace GodelTech.Data
 {
@@ -9,7 +9,7 @@ namespace GodelTech.Data
     /// <seealso>
     ///     <cref>System.IEquatable{GodelTech.Data.IEntity{TType}}</cref>
     /// </seealso>
-    public interface IEntity<TType> : IEquatable<IEntity<TType>>
+    public interface IEntity<TType> : IEqualityComparer<IEntity<TType>>
     {
         /// <summary>
         /// Gets or sets the identifier.
