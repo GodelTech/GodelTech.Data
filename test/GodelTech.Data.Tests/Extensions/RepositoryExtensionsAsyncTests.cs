@@ -53,16 +53,15 @@ namespace GodelTech.Data.Tests.Extensions
         public async Task GetAsyncTModel_ByPredicate_ReturnModel()
         {
             // Arrange
-            var dataMapper = new FakeDataMapper();
             var model = new FakeModel();
 
             _mockRepository
                 .Setup(m =>
-                    m.GetAsync<FakeModel>(It.IsAny<IDataMapper>(), It.IsAny<QueryParameters<FakeEntity, int>>()))
+                    m.GetAsync<FakeModel>(It.IsAny<QueryParameters<FakeEntity, int>>()))
                 .ReturnsAsync(model);
 
             // Act
-            var result = await _mockRepository.Object.GetAsync<FakeModel, FakeEntity, int>(dataMapper, x => x.Id == 1);
+            var result = await _mockRepository.Object.GetAsync<FakeModel, FakeEntity, int>(x => x.Id == 1);
 
             // Assert
             Assert.Equal(model, result);
@@ -72,16 +71,15 @@ namespace GodelTech.Data.Tests.Extensions
         public async Task GetAsyncTModel_ById_ReturnModel()
         {
             // Arrange
-            var dataMapper = new FakeDataMapper();
             var model = new FakeModel();
 
             _mockRepository
                 .Setup(m =>
-                    m.GetAsync<FakeModel>(It.IsAny<IDataMapper>(), It.IsAny<QueryParameters<FakeEntity, int>>()))
+                    m.GetAsync<FakeModel>(It.IsAny<QueryParameters<FakeEntity, int>>()))
                 .ReturnsAsync(model);
 
             // Act
-            var result = await _mockRepository.Object.GetAsync<FakeModel, FakeEntity, int>(dataMapper, 1);
+            var result = await _mockRepository.Object.GetAsync<FakeModel, FakeEntity, int>(1);
 
             // Assert
             Assert.Equal(model, result);
@@ -111,7 +109,6 @@ namespace GodelTech.Data.Tests.Extensions
         public async Task GetListAyncTModel_ByPredicate_ReturnModels()
         {
             // Arrange
-            var dataMapper = new FakeDataMapper();
             var models = new List<FakeModel>
             {
                 new FakeModel()
@@ -119,11 +116,11 @@ namespace GodelTech.Data.Tests.Extensions
 
             _mockRepository
                 .Setup(m =>
-                    m.GetListAsync<FakeModel>(It.IsAny<IDataMapper>(), It.IsAny<QueryParameters<FakeEntity, int>>()))
+                    m.GetListAsync<FakeModel>(It.IsAny<QueryParameters<FakeEntity, int>>()))
                 .ReturnsAsync(models);
 
             // Act
-            var result = await _mockRepository.Object.GetListAsync<FakeModel, FakeEntity, int>(dataMapper, x => x.Id == 1);
+            var result = await _mockRepository.Object.GetListAsync<FakeModel, FakeEntity, int>(x => x.Id == 1);
 
             // Assert
             Assert.Equal(models, result);

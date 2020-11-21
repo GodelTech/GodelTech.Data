@@ -32,14 +32,13 @@ namespace GodelTech.Data.Tests
         public void GetTModel_ByQueryParameters_ReturnModel()
         {
             // Arrange
-            var dataMapper = new FakeDataMapper();
             var queryParameters = new QueryParameters<FakeEntity, int>();
             var model = new FakeModel();
 
-            _mockRepository.Setup(m => m.Get<FakeModel>(dataMapper, queryParameters)).Returns(model);
+            _mockRepository.Setup(m => m.Get<FakeModel>(queryParameters)).Returns(model);
 
             // Act & Assert
-            Assert.Equal(model, _mockRepository.Object.Get<FakeModel>(dataMapper, queryParameters));
+            Assert.Equal(model, _mockRepository.Object.Get<FakeModel>(queryParameters));
         }
 
         [Fact]
@@ -59,14 +58,13 @@ namespace GodelTech.Data.Tests
         public void GetListTModel_ByQueryParameters_ReturnListOfModel()
         {
             // Arrange
-            var dataMapper = new FakeDataMapper();
             var queryParameters = new QueryParameters<FakeEntity, int>();
             var model = new FakeModel();
 
-            _mockRepository.Setup(m => m.GetList<FakeModel>(dataMapper, queryParameters)).Returns(new List<FakeModel> { model });
+            _mockRepository.Setup(m => m.GetList<FakeModel>(queryParameters)).Returns(new List<FakeModel> { model });
 
             // Act & Assert
-            Assert.Contains(model, _mockRepository.Object.GetList<FakeModel>(dataMapper, queryParameters));
+            Assert.Contains(model, _mockRepository.Object.GetList<FakeModel>(queryParameters));
         }
 
         [Fact]
@@ -86,14 +84,13 @@ namespace GodelTech.Data.Tests
         public void GetPagedListTModel_ByQueryParameters_ReturnListOfModel()
         {
             // Arrange
-            var dataMapper = new FakeDataMapper();
             var queryParameters = new QueryParameters<FakeEntity, int>();
             var pagedResult = new PagedResult<FakeModel>();
 
-            _mockRepository.Setup(m => m.GetPagedList<FakeModel>(dataMapper, queryParameters)).Returns(pagedResult);
+            _mockRepository.Setup(m => m.GetPagedList<FakeModel>(queryParameters)).Returns(pagedResult);
 
             // Act & Assert
-            Assert.Equal(pagedResult, _mockRepository.Object.GetPagedList<FakeModel>(dataMapper, queryParameters));
+            Assert.Equal(pagedResult, _mockRepository.Object.GetPagedList<FakeModel>(queryParameters));
         }
 
         [Fact]

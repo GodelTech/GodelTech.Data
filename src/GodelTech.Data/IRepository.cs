@@ -24,10 +24,9 @@ namespace GodelTech.Data
         /// If no entity is found, then null is returned.
         /// </summary>
         /// <typeparam name="TModel">The type of the T model.</typeparam>
-        /// <param name="dataMapper">The data mapper.</param>
         /// <param name="queryParameters">Query parameters.</param>
         /// <returns><cref>TModel</cref></returns>
-        TModel Get<TModel>(IDataMapper dataMapper, QueryParameters<TEntity, TType> queryParameters = null);
+        TModel Get<TModel>(QueryParameters<TEntity, TType> queryParameters = null);
 
         /// <summary>
         /// Asynchronously gets entity of type T from repository that satisfies a query parameters.
@@ -42,10 +41,9 @@ namespace GodelTech.Data
         /// If no entity is found, then null is returned.
         /// </summary>
         /// <typeparam name="TModel">The type of the T model.</typeparam>
-        /// <param name="dataMapper">The data mapper.</param>
         /// <param name="queryParameters">Query parameters.</param>
         /// <returns><cref>Task{TModel}</cref>.</returns>
-        Task<TModel> GetAsync<TModel>(IDataMapper dataMapper, QueryParameters<TEntity, TType> queryParameters = null);
+        Task<TModel> GetAsync<TModel>(QueryParameters<TEntity, TType> queryParameters = null);
 
         /// <summary>
         /// Gets entities of type T from repository that satisfies a query parameters.
@@ -58,10 +56,9 @@ namespace GodelTech.Data
         /// Gets models of type T from repository that satisfies a query parameters.
         /// </summary>
         /// <typeparam name="TModel">The type of the T model.</typeparam>
-        /// <param name="dataMapper">The data mapper.</param>
         /// <param name="queryParameters">Query parameters.</param>
         /// <returns><cref>IList{TModel}</cref>.</returns>
-        IList<TModel> GetList<TModel>(IDataMapper dataMapper, QueryParameters<TEntity, TType> queryParameters = null);
+        IList<TModel> GetList<TModel>(QueryParameters<TEntity, TType> queryParameters = null);
 
         /// <summary>
         /// Asynchronously gets entities of type T from repository that satisfies a query parameters.
@@ -74,10 +71,9 @@ namespace GodelTech.Data
         /// Asynchronously gets models of type T from repository that satisfies a query parameters.
         /// </summary>
         /// <typeparam name="TModel">The type of the T model.</typeparam>
-        /// <param name="dataMapper">The data mapper.</param>
         /// <param name="queryParameters">Query parameters.</param>
         /// <returns><cref>Task{IList{TModel}}</cref>.</returns>
-        Task<IList<TModel>> GetListAsync<TModel>(IDataMapper dataMapper, QueryParameters<TEntity, TType> queryParameters = null);
+        Task<IList<TModel>> GetListAsync<TModel>(QueryParameters<TEntity, TType> queryParameters = null);
 
         /// <summary>
         /// Gets paged list of entities of type T from repository that satisfies a query parameters.
@@ -90,10 +86,9 @@ namespace GodelTech.Data
         /// Gets paged list of models of type T from repository that satisfies a query parameters.
         /// </summary>
         /// <typeparam name="TModel">The type of the T model.</typeparam>
-        /// <param name="dataMapper">The data mapper.</param>
         /// <param name="queryParameters">Query parameters.</param>
         /// <returns><cref>PagedResult{TModel}</cref>.</returns>
-        PagedResult<TModel> GetPagedList<TModel>(IDataMapper dataMapper, QueryParameters<TEntity, TType> queryParameters);
+        PagedResult<TModel> GetPagedList<TModel>(QueryParameters<TEntity, TType> queryParameters);
 
         /// <summary>
         /// Asynchronously gets paged list of entities of type T from repository that satisfies a query parameters.
@@ -106,10 +101,9 @@ namespace GodelTech.Data
         /// Asynchronously gets paged list of models of type T from repository that satisfies a query parameters.
         /// </summary>
         /// <typeparam name="TModel">The type of the T model.</typeparam>
-        /// <param name="dataMapper">The data mapper.</param>
         /// <param name="queryParameters">Query parameters.</param>
         /// <returns><cref>Task{PagedResult{TModel}}</cref>.</returns>
-        Task<PagedResult<TModel>> GetPagedListAsync<TModel>(IDataMapper dataMapper, QueryParameters<TEntity, TType> queryParameters);
+        Task<PagedResult<TModel>> GetPagedListAsync<TModel>(QueryParameters<TEntity, TType> queryParameters);
 
         /// <summary>
         /// Checks if any entity of type T satisfies a query parameters.

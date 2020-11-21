@@ -35,16 +35,15 @@ namespace GodelTech.Data.Tests
         public async Task GetListTModelAsync_ByQueryParameters_ReturnListOfModel()
         {
             // Arrange
-            var dataMapper = new FakeDataMapper();
             var queryParameters = new QueryParameters<FakeEntity, int>();
             var model = new FakeModel();
 
             _mockRepository
-                .Setup(m => m.GetListAsync<FakeModel>(dataMapper, queryParameters))
+                .Setup(m => m.GetListAsync<FakeModel>(queryParameters))
                 .ReturnsAsync(new List<FakeModel> { model });
 
             // Act & Assert
-            Assert.Contains(model, await _mockRepository.Object.GetListAsync<FakeModel>(dataMapper, queryParameters));
+            Assert.Contains(model, await _mockRepository.Object.GetListAsync<FakeModel>(queryParameters));
         }
 
         [Fact]
@@ -66,16 +65,15 @@ namespace GodelTech.Data.Tests
         public async Task GetPagedListTModelAsync_ByQueryParameters_ReturnListOfModel()
         {
             // Arrange
-            var dataMapper = new FakeDataMapper();
             var queryParameters = new QueryParameters<FakeEntity, int>();
             var pagedResult = new PagedResult<FakeModel>();
 
             _mockRepository
-                .Setup(m => m.GetPagedListAsync<FakeModel>(dataMapper, queryParameters))
+                .Setup(m => m.GetPagedListAsync<FakeModel>(queryParameters))
                 .ReturnsAsync(pagedResult);
 
             // Act & Assert
-            Assert.Equal(pagedResult, await _mockRepository.Object.GetPagedListAsync<FakeModel>(dataMapper, queryParameters));
+            Assert.Equal(pagedResult, await _mockRepository.Object.GetPagedListAsync<FakeModel>(queryParameters));
         }
 
         [Fact]

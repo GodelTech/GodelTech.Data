@@ -11,10 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodelTech.Data", "src\Godel
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodelTech.Data.Tests", "test\GodelTech.Data.Tests\GodelTech.Data.Tests.csproj", "{00000000-0000-0000-0000-000000000002}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{D9869F25-1898-4E66-9419-7E69FAB994FF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "build", "tools\build\build.csproj", "{04F6E495-93AE-4256-8092-E1BA1E881B5F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +25,6 @@ Global
 		{00000000-0000-0000-0000-000000000002}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00000000-0000-0000-0000-000000000002}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00000000-0000-0000-0000-000000000002}.Release|Any CPU.Build.0 = Release|Any CPU
-		{04F6E495-93AE-4256-8092-E1BA1E881B5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{04F6E495-93AE-4256-8092-E1BA1E881B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{04F6E495-93AE-4256-8092-E1BA1E881B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{04F6E495-93AE-4256-8092-E1BA1E881B5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -40,7 +32,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{00000000-0000-0000-0000-000000000001} = {563B7ADF-82EB-4B8E-90CD-967B7801BF76}
 		{00000000-0000-0000-0000-000000000002} = {17D2362F-4BB6-462D-914C-C04DD1ACB0A9}
-		{04F6E495-93AE-4256-8092-E1BA1E881B5F} = {D9869F25-1898-4E66-9419-7E69FAB994FF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B5F3B011-4BF2-4B6D-A06A-455EFC72A4E0}

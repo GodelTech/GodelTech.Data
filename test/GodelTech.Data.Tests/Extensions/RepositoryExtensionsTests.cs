@@ -52,16 +52,15 @@ namespace GodelTech.Data.Tests.Extensions
         public void GetTModel_ByPredicate_ReturnModel()
         {
             // Arrange
-            var dataMapper = new FakeDataMapper();
             var model = new FakeModel();
 
             _mockRepository
                 .Setup(m =>
-                    m.Get<FakeModel>(It.IsAny<IDataMapper>(), It.IsAny<QueryParameters<FakeEntity, int>>()))
+                    m.Get<FakeModel>(It.IsAny<QueryParameters<FakeEntity, int>>()))
                 .Returns(model);
 
             // Act
-            var result = _mockRepository.Object.Get<FakeModel, FakeEntity, int>(dataMapper, x => x.Id == 1);
+            var result = _mockRepository.Object.Get<FakeModel, FakeEntity, int>(x => x.Id == 1);
 
             // Assert
             Assert.Equal(model, result);
@@ -71,16 +70,15 @@ namespace GodelTech.Data.Tests.Extensions
         public void GetTModel_ById_ReturnModel()
         {
             // Arrange
-            var dataMapper = new FakeDataMapper();
             var model = new FakeModel();
 
             _mockRepository
                 .Setup(m =>
-                    m.Get<FakeModel>(It.IsAny<IDataMapper>(), It.IsAny<QueryParameters<FakeEntity, int>>()))
+                    m.Get<FakeModel>(It.IsAny<QueryParameters<FakeEntity, int>>()))
                 .Returns(model);
 
             // Act
-            var result = _mockRepository.Object.Get<FakeModel, FakeEntity, int>(dataMapper, 1);
+            var result = _mockRepository.Object.Get<FakeModel, FakeEntity, int>(1);
 
             // Assert
             Assert.Equal(model, result);
@@ -110,7 +108,6 @@ namespace GodelTech.Data.Tests.Extensions
         public void GetListTModel_ByPredicate_ReturnModels()
         {
             // Arrange
-            var dataMapper = new FakeDataMapper();
             var models = new List<FakeModel>
             {
                 new FakeModel()
@@ -118,11 +115,11 @@ namespace GodelTech.Data.Tests.Extensions
 
             _mockRepository
                 .Setup(m =>
-                    m.GetList<FakeModel>(It.IsAny<IDataMapper>(), It.IsAny<QueryParameters<FakeEntity, int>>()))
+                    m.GetList<FakeModel>(It.IsAny<QueryParameters<FakeEntity, int>>()))
                 .Returns(models);
 
             // Act
-            var result = _mockRepository.Object.GetList<FakeModel, FakeEntity, int>(dataMapper, x => x.Id == 1);
+            var result = _mockRepository.Object.GetList<FakeModel, FakeEntity, int>(x => x.Id == 1);
 
             // Assert
             Assert.Equal(models, result);

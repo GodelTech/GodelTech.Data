@@ -67,13 +67,12 @@ namespace GodelTech.Data
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
         /// <typeparam name="TType">The type of the T type.</typeparam>
         /// <param name="repository">The repository.</param>
-        /// <param name="dataMapper">The data mapper.</param>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns><cref>TModel</cref></returns>
-        public static TModel Get<TModel, TEntity, TType>(this IRepository<TEntity, TType> repository, IDataMapper dataMapper, Expression<Func<TEntity, bool>> filterExpression)
+        public static TModel Get<TModel, TEntity, TType>(this IRepository<TEntity, TType> repository, Expression<Func<TEntity, bool>> filterExpression)
             where TEntity : class, IEntity<TType>
         {
-            return repository.Get<TModel>(dataMapper, GetQueryParameters<TEntity, TType>(filterExpression));
+            return repository.Get<TModel>(GetQueryParameters<TEntity, TType>(filterExpression));
         }
 
         /// <summary>
@@ -84,13 +83,12 @@ namespace GodelTech.Data
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
         /// <typeparam name="TType">The type of the T type.</typeparam>
         /// <param name="repository">The repository.</param>
-        /// <param name="dataMapper">The data mapper.</param>
         /// <param name="id">The identifier.</param>
         /// <returns><cref>TModel</cref></returns>
-        public static TModel Get<TModel, TEntity, TType>(this IRepository<TEntity, TType> repository, IDataMapper dataMapper, TType id)
+        public static TModel Get<TModel, TEntity, TType>(this IRepository<TEntity, TType> repository, TType id)
             where TEntity : class, IEntity<TType>
         {
-            return repository.Get<TModel, TEntity, TType>(dataMapper, GetIdFilterExpression<TEntity, TType>(id));
+            return repository.Get<TModel, TEntity, TType>(GetIdFilterExpression<TEntity, TType>(id));
         }
 
         /// <summary>
@@ -131,13 +129,12 @@ namespace GodelTech.Data
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
         /// <typeparam name="TType">The type of the T type.</typeparam>
         /// <param name="repository">The repository.</param>
-        /// <param name="dataMapper">The data mapper.</param>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns><cref>Task{TModel}</cref>.</returns>
-        public static async Task<TModel> GetAsync<TModel, TEntity, TType>(this IRepository<TEntity, TType> repository, IDataMapper dataMapper, Expression<Func<TEntity, bool>> filterExpression)
+        public static async Task<TModel> GetAsync<TModel, TEntity, TType>(this IRepository<TEntity, TType> repository, Expression<Func<TEntity, bool>> filterExpression)
             where TEntity : class, IEntity<TType>
         {
-            return await repository.GetAsync<TModel>(dataMapper, GetQueryParameters<TEntity, TType>(filterExpression));
+            return await repository.GetAsync<TModel>(GetQueryParameters<TEntity, TType>(filterExpression));
         }
 
         /// <summary>
@@ -148,13 +145,12 @@ namespace GodelTech.Data
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
         /// <typeparam name="TType">The type of the T type.</typeparam>
         /// <param name="repository">The repository.</param>
-        /// <param name="dataMapper">The data mapper.</param>
         /// <param name="id">The identifier.</param>
         /// <returns><cref>Task{TModel}</cref>.</returns>
-        public static async Task<TModel> GetAsync<TModel, TEntity, TType>(this IRepository<TEntity, TType> repository, IDataMapper dataMapper, TType id)
+        public static async Task<TModel> GetAsync<TModel, TEntity, TType>(this IRepository<TEntity, TType> repository, TType id)
             where TEntity : class, IEntity<TType>
         {
-            return await repository.GetAsync<TModel, TEntity, TType>(dataMapper, GetIdFilterExpression<TEntity, TType>(id));
+            return await repository.GetAsync<TModel, TEntity, TType>(GetIdFilterExpression<TEntity, TType>(id));
         }
 
         private static Expression<Func<TEntity, bool>> GetIdFilterExpression<TEntity, TType>(TType id)
@@ -189,13 +185,12 @@ namespace GodelTech.Data
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
         /// <typeparam name="TType">The type of the T type.</typeparam>
         /// <param name="repository">The repository.</param>
-        /// <param name="dataMapper">The data mapper.</param>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns><cref>IList{TModel}</cref>.</returns>
-        public static IList<TModel> GetList<TModel, TEntity, TType>(this IRepository<TEntity, TType> repository, IDataMapper dataMapper, Expression<Func<TEntity, bool>> filterExpression)
+        public static IList<TModel> GetList<TModel, TEntity, TType>(this IRepository<TEntity, TType> repository, Expression<Func<TEntity, bool>> filterExpression)
             where TEntity : class, IEntity<TType>
         {
-            return repository.GetList<TModel>(dataMapper, GetQueryParameters<TEntity, TType>(filterExpression));
+            return repository.GetList<TModel>(GetQueryParameters<TEntity, TType>(filterExpression));
         }
 
         /// <summary>
@@ -219,13 +214,12 @@ namespace GodelTech.Data
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
         /// <typeparam name="TType">The type of the T type.</typeparam>
         /// <param name="repository">The repository.</param>
-        /// <param name="dataMapper">The data mapper.</param>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns><cref>Task{IList{TModel}}</cref>.</returns>
-        public static async Task<IList<TModel>> GetListAsync<TModel, TEntity, TType>(this IRepository<TEntity, TType> repository, IDataMapper dataMapper, Expression<Func<TEntity, bool>> filterExpression)
+        public static async Task<IList<TModel>> GetListAsync<TModel, TEntity, TType>(this IRepository<TEntity, TType> repository, Expression<Func<TEntity, bool>> filterExpression)
             where TEntity : class, IEntity<TType>
         {
-            return await repository.GetListAsync<TModel>(dataMapper, GetQueryParameters<TEntity, TType>(filterExpression));
+            return await repository.GetListAsync<TModel>(GetQueryParameters<TEntity, TType>(filterExpression));
         }
 
         /// <summary>
