@@ -1,4 +1,5 @@
 ﻿using System;
+using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Xunit;
 
@@ -19,6 +20,18 @@ namespace GodelTech.Data.Tests
         {
             // Arrange & Act & Assert
             Assert.IsAssignableFrom<IDisposable>(_mockUnitOfWork.Object);
+        }
+
+        [Fact]
+        public void GetRepository_ReturnRepository()
+        {
+            // Arrange
+            var mockRepository = new Mock<IRepository<FakeEntity, int>>(MockBehavior.Strict);
+
+            _mockUnitOfWork.Setup(m => m.GetRepository<FakeEntity, int>()).Returns(mockRepository.Object);
+
+            // Act & Assert
+            Assert.Equal(mockRepository.Object, _mockUnitOfWork.Object.GetRepository<FakeEntity, int>());
         }
 
         [Fact]
