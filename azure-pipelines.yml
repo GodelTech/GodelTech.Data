@@ -144,7 +144,6 @@ stages:
         command: 'pack'
         packagesToPack: '**/*.csproj'
         packDirectory: '$(Build.ArtifactStagingDirectory)/packages'
-        nobuild: true
         versioningScheme: 'byEnvVar'
         versionEnvVar: 'Build.BuildNumber'
     - task: PublishPipelineArtifact@1
