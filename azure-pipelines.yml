@@ -16,7 +16,7 @@ resources:
       endpoint: 'godeltech'
       name: 'GodelTech/AzureDevOps.Pipeline.Templates'
       ref: 'refs/heads/feature/semver-1'
- 
+
 extends:
   template: '.NET Core/NuGet.yml@GodelTech'
   parameters:
