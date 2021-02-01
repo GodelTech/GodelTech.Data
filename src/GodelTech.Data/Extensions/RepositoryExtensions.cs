@@ -4,8 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-// ReSharper disable once CheckNamespace
-namespace GodelTech.Data
+namespace GodelTech.Data.Extensions
 {
     /// <summary>
     /// Extensions of repository for data layer.
