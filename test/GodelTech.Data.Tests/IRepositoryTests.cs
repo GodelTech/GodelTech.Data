@@ -5,7 +5,6 @@ using Xunit;
 
 namespace GodelTech.Data.Tests
 {
-    // ReSharper disable once InconsistentNaming
     public class IRepositoryTests
     {
         private readonly Mock<IRepository<FakeEntity, int>> _mockRepository;

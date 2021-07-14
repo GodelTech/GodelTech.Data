@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.Serialization;
 
-// ReSharper disable once CheckNamespace
 namespace GodelTech.Data
 {
     /// <summary>

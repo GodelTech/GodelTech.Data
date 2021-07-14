@@ -1,5 +1,4 @@
-﻿// ReSharper disable once CheckNamespace
-namespace GodelTech.Data
+﻿namespace GodelTech.Data
 {
     /// <summary>
     /// Page rule class.
