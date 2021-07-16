@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace GodelTech.Data
 {
@@ -9,23 +10,42 @@ namespace GodelTech.Data
     public class PagedResult<TItem>
     {
         /// <summary>
-        /// Gets or sets page index.
+        /// Initializes a new instance of the <see cref="PagedResult{TItem}"/> class.
         /// </summary>
-        public int PageIndex { get; set; }
+        /// <param name="pageIndex">Page index.</param>
+        /// <param name="pageSize">Items count per page.</param>
+        /// <param name="items">Items on page.</param>
+        /// <param name="totalCount">Total count of items in repository</param>
+        public PagedResult(
+            int pageIndex,
+            int pageSize,
+            IEnumerable<TItem> items,
+            int totalCount)
+        {
+            PageIndex = pageIndex;
+            PageSize = pageSize;
+            Items = items == null ? new List<TItem>() : items.ToList();
+            TotalCount = totalCount;
+        }
 
         /// <summary>
-        /// Gets or sets items count per page.
+        /// Gets page index.
         /// </summary>
-        public int PageSize { get; set; }
+        public int PageIndex { get; }
 
         /// <summary>
-        /// Gets or sets items per page.
+        /// Gets items count per page.
         /// </summary>
-        public IList<TItem> Items { get; set; }
+        public int PageSize { get; }
 
         /// <summary>
-        /// Gets or sets total count of items in repository.
+        /// Gets items on page.
         /// </summary>
-        public int TotalCount { get; set; }
+        public IReadOnlyCollection<TItem> Items { get; }
+
+        /// <summary>
+        /// Gets total count of items in repository.
+        /// </summary>
+        public int TotalCount { get; }
     }
 }

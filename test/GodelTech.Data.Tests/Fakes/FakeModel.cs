@@ -2,6 +2,6 @@
 {
     public class FakeModel
     {
-        // this is fake model and it is ok that it is empty
+        public int Id { get; set; }
     }
 }
