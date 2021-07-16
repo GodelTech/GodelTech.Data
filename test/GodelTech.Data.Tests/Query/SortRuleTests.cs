@@ -1,43 +1,126 @@
 ﻿using System;
-using System.Linq.Expressions;
-using GodelTech.Data.Tests.Fakes;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using GodelTech.Data.Tests.Fakes.Entities;
 using Xunit;
 
 namespace GodelTech.Data.Tests.Query
 {
     public class SortRuleTests
     {
-        private readonly SortRule<FakeEntity, int> _sortRule;
+        public static IEnumerable<object[]> SortOrderMemberData =>
+            new Collection<object[]>
+            {
+                new object[]
+                {
+                    new SortRule<FakeGuidEntity, Guid>(),
+                    SortOrder.Ascending
+                },
+                new object[]
+                {
+                    new SortRule<FakeGuidEntity, Guid>
+                    {
+                        SortOrder = SortOrder.Ascending
+                    },
+                    SortOrder.Ascending
+                },
+                new object[]
+                {
+                    new SortRule<FakeGuidEntity, Guid>
+                    {
+                        SortOrder = SortOrder.Descending
+                    },
+                    SortOrder.Descending
+                }
+            };
 
-        public SortRuleTests()
+        [Theory]
+        [MemberData(nameof(SortOrderMemberData))]
+        public void SortOrder_Success(
+            SortRule<FakeGuidEntity, Guid> sortRule,
+            SortOrder expectedSortOrder)
         {
-            _sortRule = new SortRule<FakeEntity, int>();
+            // Arrange & Act & Assert
+            Assert.Equal(expectedSortOrder, sortRule?.SortOrder);
         }
 
-        [Fact]
-        public void SortOrder_Success()
+        public static IEnumerable<object[]> IsValidMemberData =>
+            new Collection<object[]>
+            {
+                new object[]
+                {
+                    new SortRule<FakeGuidEntity, Guid>(),
+                    false
+                },
+                new object[]
+                {
+                    new SortRule<FakeGuidEntity, Guid>
+                    {
+                        Expression = null
+                    },
+                    false
+                },
+                new object[]
+                {
+                    new SortRule<FakeGuidEntity, Guid>
+                    {
+                        Expression = entity => entity.Id
+                    },
+                    true
+                },
+                new object[]
+                {
+                    new SortRule<FakeIntEntity, int>(),
+                    false
+                },
+                new object[]
+                {
+                    new SortRule<FakeIntEntity, int>
+                    {
+                        Expression = null
+                    },
+                    false
+                },
+                new object[]
+                {
+                    new SortRule<FakeIntEntity, int>
+                    {
+                        Expression = entity => entity.Id
+                    },
+                    true
+                },
+                new object[]
+                {
+                    new SortRule<FakeStringEntity, string>(),
+                    false
+                },
+                new object[]
+                {
+                    new SortRule<FakeStringEntity, string>
+                    {
+                        Expression = null
+                    },
+                    false
+                },
+                new object[]
+                {
+                    new SortRule<FakeStringEntity, string>
+                    {
+                        Expression = entity => entity.Id
+                    },
+                    true
+                }
+            };
+
+        [Theory]
+        [MemberData(nameof(IsValidMemberData))]
+        public void IsValid_Success<TEntity, TType>(
+            SortRule<TEntity, TType> sortRule,
+            bool expectedResult)
+            where TEntity : class, IEntity<TType>
         {
-            // Arrange
-            const SortOrder sortOrder = SortOrder.Descending;
-
-            // Act
-            _sortRule.SortOrder = sortOrder;
-
-            // Assert
-            Assert.Equal(sortOrder, _sortRule.SortOrder);
-        }
-
-        [Fact]
-        public void Expression_Success()
-        {
-            // Arrange
-            Expression<Func<FakeEntity, object>> expression = x => x.Id == 1;
-
-            // Act
-            _sortRule.Expression = expression;
-
-            // Assert
-            Assert.Equal(expression, _sortRule.Expression);
+            // Arrange & Act & Assert
+            Assert.Equal(expectedResult, sortRule?.IsValid);
         }
     }
 }

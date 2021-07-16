@@ -1,5 +1,4 @@
-﻿// ReSharper disable once CheckNamespace
-namespace GodelTech.Data
+﻿namespace GodelTech.Data
 {
     /// <summary>
     /// Specifies an order in which to return the search results.

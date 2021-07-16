@@ -1,160 +1,449 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using GodelTech.Data.Extensions;
 using GodelTech.Data.Tests.Fakes;
+using GodelTech.Data.Tests.Fakes.Entities;
 using Moq;
+using Neleus.LambdaCompare;
 using Xunit;
 
 namespace GodelTech.Data.Tests.Extensions
 {
     public class RepositoryExtensionsAsyncTests
     {
-        private readonly Mock<IRepository<FakeEntity, int>> _mockRepository;
+        #region GetAsync
 
-        public RepositoryExtensionsAsyncTests()
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetAsync_WhenRepositoryIsNull_ThrowsArgumentNullException<TEntity, TType>(
+            TEntity entity,
+            TType defaultValue,
+            Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class, IEntity<TType>
         {
-            _mockRepository = new Mock<IRepository<FakeEntity, int>>(MockBehavior.Strict);
+            // Arrange & Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => RepositoryExtensions.GetAsync<TEntity, TType>(null, filterExpression)
+            );
+
+            if (entity != null && entity.Id != null)
+            {
+                Assert.IsType(defaultValue.GetType(), entity.Id);
+            }
+
+            Assert.Equal("repository", exception.ParamName);
         }
 
-        [Fact]
-        public async Task GetAsync_ByPredicate_ReturnEntity()
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetAsync_ByFilterExpression_ReturnsEntity<TEntity, TType>(
+            TEntity entity,
+            TType defaultValue,
+            Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class, IEntity<TType>
         {
             // Arrange
-            var entity = new FakeEntity();
+            var mockRepository = new Mock<IRepository<TEntity, TType>>(MockBehavior.Strict);
 
-            _mockRepository
-                .Setup(m => m.GetAsync(It.IsAny<QueryParameters<FakeEntity, int>>()))
+            mockRepository
+                .Setup(
+                    x => x.GetAsync(
+                        It.Is<QueryParameters<TEntity, TType>>(
+                            y => y.Filter.Expression == filterExpression
+                                 && y.Sort == null
+                                 && y.Page == null
+                        )
+                    )
+                )
                 .ReturnsAsync(entity);
 
+            var repository = mockRepository.Object;
+
             // Act
-            var result = await _mockRepository.Object.GetAsync(x => x.Id == 1);
+            var result = await repository.GetAsync(filterExpression);
 
             // Assert
+            if (entity != null && entity.Id != null)
+            {
+                Assert.IsType(defaultValue.GetType(), entity.Id);
+            }
+
             Assert.Equal(entity, result);
         }
 
-        [Fact]
-        public async Task GetAsync_ById_ReturnEntity()
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetAsync_ById_ReturnsEntity<TEntity, TType>(
+            TEntity entity,
+            TType defaultValue,
+            object id,
+            bool expectedResult)
+            where TEntity : class, IEntity<TType>
         {
             // Arrange
-            var entity = new FakeEntity();
+            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TType>((TType) id);
 
-            _mockRepository
-                .Setup(m => m.GetAsync(It.IsAny<QueryParameters<FakeEntity, int>>()))
+            var mockRepository = new Mock<IRepository<TEntity, TType>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.GetAsync(
+                        It.Is<QueryParameters<TEntity, TType>>(
+                            y => Lambda.Eq(
+                                     y.Filter.Expression,
+                                     filterExpression
+                                 )
+                                 && y.Sort == null
+                                 && y.Page == null
+                        )
+                    )
+                )
                 .ReturnsAsync(entity);
 
+            var repository = mockRepository.Object;
+
             // Act
-            var result = await _mockRepository.Object.GetAsync(1);
+            var result = await repository.GetAsync((TType) id);
 
             // Assert
+            if (id != null)
+            {
+                Assert.IsType(defaultValue.GetType(), id);
+            }
+
+            Assert.Equal(
+                expectedResult,
+                filterExpression.Compile().Invoke(entity)
+            );
+
             Assert.Equal(entity, result);
         }
 
-        [Fact]
-        public async Task GetAsyncTModel_ByPredicate_ReturnModel()
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetModelAsync_WhenRepositoryIsNull_ThrowsArgumentNullException<TEntity, TType>(
+            TEntity entity,
+            TType defaultValue,
+            Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class, IEntity<TType>
+        {
+            // Arrange & Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => RepositoryExtensions.GetAsync<FakeModel, TEntity, TType>(null, filterExpression)
+            );
+
+            if (entity != null && entity.Id != null)
+            {
+                Assert.IsType(defaultValue.GetType(), entity.Id);
+            }
+
+            Assert.Equal("repository", exception.ParamName);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetModelAsync_ByFilterExpression_ReturnsModel<TEntity, TType>(
+            TEntity entity,
+            TType defaultValue,
+            Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class, IEntity<TType>
         {
             // Arrange
             var model = new FakeModel();
 
-            _mockRepository
-                .Setup(m =>
-                    m.GetAsync<FakeModel>(It.IsAny<QueryParameters<FakeEntity, int>>()))
+            var mockRepository = new Mock<IRepository<TEntity, TType>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.GetAsync<FakeModel>(
+                        It.Is<QueryParameters<TEntity, TType>>(
+                            y => y.Filter.Expression == filterExpression
+                                 && y.Sort == null
+                                 && y.Page == null
+                        )
+                    )
+                )
                 .ReturnsAsync(model);
 
+            var repository = mockRepository.Object;
+
             // Act
-            var result = await _mockRepository.Object.GetAsync<FakeModel, FakeEntity, int>(x => x.Id == 1);
+            var result = await repository.GetAsync<FakeModel, TEntity, TType>(filterExpression);
 
             // Assert
+            if (entity != null && entity.Id != null)
+            {
+                Assert.IsType(defaultValue.GetType(), entity.Id);
+            }
+
             Assert.Equal(model, result);
         }
 
-        [Fact]
-        public async Task GetAsyncTModel_ById_ReturnModel()
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetModelAsync_ById_ReturnsModel<TEntity, TType>(
+            TEntity entity,
+            TType defaultValue,
+            object id,
+            bool expectedResult)
+            where TEntity : class, IEntity<TType>
         {
             // Arrange
             var model = new FakeModel();
 
-            _mockRepository
-                .Setup(m =>
-                    m.GetAsync<FakeModel>(It.IsAny<QueryParameters<FakeEntity, int>>()))
+            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TType>((TType)id);
+
+            var mockRepository = new Mock<IRepository<TEntity, TType>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.GetAsync<FakeModel>(
+                        It.Is<QueryParameters<TEntity, TType>>(
+                            y => Lambda.Eq(
+                                     y.Filter.Expression,
+                                     filterExpression
+                                 )
+                                 && y.Sort == null
+                                 && y.Page == null
+                        )
+                    )
+                )
                 .ReturnsAsync(model);
 
+            var repository = mockRepository.Object;
+
             // Act
-            var result = await _mockRepository.Object.GetAsync<FakeModel, FakeEntity, int>(1);
+            var result = await repository.GetAsync<FakeModel, TEntity, TType>((TType)id);
 
             // Assert
+            if (id != null)
+            {
+                Assert.IsType(defaultValue.GetType(), id);
+            }
+
+            Assert.Equal(
+                expectedResult,
+                filterExpression.Compile().Invoke(entity)
+            );
+
             Assert.Equal(model, result);
         }
 
+        #endregion
+
+        #region GetListAsync
+
         [Fact]
-        public async Task GetListAsync_ByPredicate_ReturnEntities()
+        public async Task GetListAsync_WhenRepositoryIsNull_ThrowsArgumentNullException()
+        {
+            // Arrange & Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => RepositoryExtensions.GetListAsync<FakeIntEntity, int>(null, x => x.Id == 1)
+            );
+
+            Assert.Equal("repository", exception.ParamName);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.NullFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetListAsync_ByFilterExpression_ReturnsEntity<TEntity, TType>(
+            TEntity entity,
+            TType defaultValue,
+            Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class, IEntity<TType>
         {
             // Arrange
-            var entities = new List<FakeEntity>
-            {
-                new FakeEntity()
-            };
+            var list = new List<TEntity>();
 
-            _mockRepository
-                .Setup(m => m.GetListAsync(It.IsAny<QueryParameters<FakeEntity, int>>()))
-                .ReturnsAsync(entities);
+            var mockRepository = new Mock<IRepository<TEntity, TType>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.GetListAsync(
+                        It.Is<QueryParameters<TEntity, TType>>(
+                            y =>
+                                filterExpression == null && y == null
+                                || y.Filter.Expression == filterExpression
+                                && y.Sort == null
+                                && y.Page == null
+                        )
+                    )
+                )
+                .ReturnsAsync(list);
+
+            var repository = mockRepository.Object;
 
             // Act
-            var result = await _mockRepository.Object.GetListAsync(x => x.Id == 1);
+            var result = await repository.GetListAsync(filterExpression);
 
             // Assert
-            Assert.Equal(entities, result);
+            if (entity != null && entity.Id != null)
+            {
+                Assert.IsType(defaultValue.GetType(), entity.Id);
+            }
+
+            Assert.Equal(list, result);
         }
 
         [Fact]
-        public async Task GetListAyncTModel_ByPredicate_ReturnModels()
+        public async Task GetListModelAsync_WhenRepositoryIsNull_ThrowsArgumentNullException()
         {
-            // Arrange
-            var models = new List<FakeModel>
-            {
-                new FakeModel()
-            };
+            // Arrange & Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => RepositoryExtensions.GetListAsync<FakeModel, FakeIntEntity, int>(null, x => x.Id == 1)
+            );
 
-            _mockRepository
-                .Setup(m =>
-                    m.GetListAsync<FakeModel>(It.IsAny<QueryParameters<FakeEntity, int>>()))
-                .ReturnsAsync(models);
-
-            // Act
-            var result = await _mockRepository.Object.GetListAsync<FakeModel, FakeEntity, int>(x => x.Id == 1);
-
-            // Assert
-            Assert.Equal(models, result);
+            Assert.Equal("repository", exception.ParamName);
         }
 
-        [Fact]
-        public async Task ExistsAsync_ByPredicate_ReturnBoolean()
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.NullFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetListModelAsync_ByFilterExpression_ReturnsEntity<TEntity, TType>(
+            TEntity entity,
+            TType defaultValue,
+            Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class, IEntity<TType>
         {
             // Arrange
-            _mockRepository
-                .Setup(m => m.ExistsAsync(It.IsAny<QueryParameters<FakeEntity, int>>()))
+            var list = new List<FakeModel>();
+
+            var mockRepository = new Mock<IRepository<TEntity, TType>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.GetListAsync<FakeModel>(
+                        It.Is<QueryParameters<TEntity, TType>>(
+                            y =>
+                                filterExpression == null && y == null
+                                || y.Filter.Expression == filterExpression
+                                && y.Sort == null
+                                && y.Page == null
+                        )
+                    )
+                )
+                .ReturnsAsync(list);
+
+            var repository = mockRepository.Object;
+
+            // Act
+            var result = await repository.GetListAsync<FakeModel, TEntity, TType>(filterExpression);
+
+            // Assert
+            if (entity != null && entity.Id != null)
+            {
+                Assert.IsType(defaultValue.GetType(), entity.Id);
+            }
+
+            Assert.Equal(list, result);
+        }
+
+        #endregion
+
+        #region ExistsAsync
+
+        [Fact]
+        public async Task ExistsAsync_WhenRepositoryIsNull_ThrowsArgumentNullException()
+        {
+            // Arrange & Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => RepositoryExtensions.ExistsAsync<FakeIntEntity, int>(null, x => x.Id == 1)
+            );
+
+            Assert.Equal("repository", exception.ParamName);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.NullFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task ExistsAsync_ByFilterExpression_ReturnsEntity<TEntity, TType>(
+            TEntity entity,
+            TType defaultValue,
+            Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class, IEntity<TType>
+        {
+            // Arrange
+            var mockRepository = new Mock<IRepository<TEntity, TType>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.ExistsAsync(
+                        It.Is<QueryParameters<TEntity, TType>>(
+                            y =>
+                                filterExpression == null && y == null
+                                || y.Filter.Expression == filterExpression
+                                && y.Sort == null
+                                && y.Page == null
+                        )
+                    )
+                )
                 .ReturnsAsync(true);
 
+            var repository = mockRepository.Object;
+
             // Act
-            var result = await _mockRepository.Object.ExistsAsync(x => x.Id == 1);
+            var result = await repository.ExistsAsync(filterExpression);
 
             // Assert
+            if (entity != null && entity.Id != null)
+            {
+                Assert.IsType(defaultValue.GetType(), entity.Id);
+            }
+
             Assert.True(result);
         }
 
-        [Fact]
-        public async Task ExistsAsync_ById_ReturnBoolean()
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task ExistsAsync_ById_ReturnsEntity<TEntity, TType>(
+            TEntity entity,
+            TType defaultValue,
+            object id,
+            bool expectedResult)
+            where TEntity : class, IEntity<TType>
         {
             // Arrange
-            _mockRepository
-                .Setup(m => m.ExistsAsync(It.IsAny<QueryParameters<FakeEntity, int>>()))
+            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TType>((TType) id);
+
+            var mockRepository = new Mock<IRepository<TEntity, TType>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.ExistsAsync(
+                        It.Is<QueryParameters<TEntity, TType>>(
+                            y => Lambda.Eq(
+                                     y.Filter.Expression,
+                                     filterExpression
+                                 )
+                                 && y.Sort == null
+                                 && y.Page == null
+                        )
+                    )
+                )
                 .ReturnsAsync(true);
 
+            var repository = mockRepository.Object;
+
             // Act
-            var result = await _mockRepository.Object.ExistsAsync(1);
+            var result = await repository.ExistsAsync((TType) id);
 
             // Assert
+            if (id != null)
+            {
+                Assert.IsType(defaultValue.GetType(), id);
+            }
+
+            Assert.Equal(
+                expectedResult,
+                filterExpression.Compile().Invoke(entity)
+            );
+
             Assert.True(result);
         }
+
+        #endregion
     }
 }

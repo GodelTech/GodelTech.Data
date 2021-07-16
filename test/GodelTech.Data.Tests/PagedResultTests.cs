@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using GodelTech.Data.Tests.Fakes;
 using Xunit;
 
@@ -6,63 +7,58 @@ namespace GodelTech.Data.Tests
 {
     public class PagedResultTests
     {
-        private readonly PagedResult<FakeEntity> _pagedResult;
+        public static IEnumerable<object[]> ConstructorMemberData =>
+            new Collection<object[]>
+            {
+                new object[]
+                {
+                    new PagedResult<FakeModel>(0, 0, null, 0),
+                    0,
+                    0,
+                    new Collection<FakeModel>(),
+                    0
+                },
+                new object[]
+                {
+                    new PagedResult<FakeModel>(
+                        1,
+                        2,
+                        new Collection<FakeModel>
+                        {
+                            new FakeModel
+                            {
+                                Id = 99
+                            }
+                        },
+                        3
+                    ),
+                    1,
+                    2,
+                    new Collection<FakeModel>
+                    {
+                        new FakeModel
+                        {
+                            Id = 99
+                        }
+                    },
+                    3
+                }
+            };
 
-        public PagedResultTests()
+        [Theory]
+        [MemberData(nameof(ConstructorMemberData))]
+        public void Constructor(
+            PagedResult<FakeModel> item,
+            int expectedPageIndex,
+            int expectedPageSize,
+            Collection<FakeModel> expectedItems,
+            int expectedTotalCount)
         {
-            _pagedResult = new PagedResult<FakeEntity>();
-        }
-
-        [Fact]
-        public void PageIndex_Success()
-        {
-            // Arrange
-            const int pageIndex = 1;
-
-            // Act
-            _pagedResult.PageIndex = pageIndex;
-
-            // Assert
-            Assert.Equal(pageIndex, _pagedResult.PageIndex);
-        }
-
-        [Fact]
-        public void PageSize_Success()
-        {
-            // Arrange
-            const int pageSize = 1;
-
-            // Act
-            _pagedResult.PageSize = pageSize;
-
-            // Assert
-            Assert.Equal(pageSize, _pagedResult.PageSize);
-        }
-
-        [Fact]
-        public void Items_Success()
-        {
-            // Arrange
-            var items = new List<FakeEntity>();
-
-            // Act
-            _pagedResult.Items = items;
-
-            // Assert
-            Assert.Equal(items, _pagedResult.Items);
-        }
-
-        [Fact]
-        public void TotalCount_Success()
-        {
-            // Arrange
-            const int totalCount = 1;
-
-            // Act
-            _pagedResult.TotalCount = totalCount;
-
-            // Assert
-            Assert.Equal(totalCount, _pagedResult.TotalCount);
+            // Arrange & Act & Assert
+            Assert.Equal(expectedPageIndex, item?.PageIndex);
+            Assert.Equal(expectedPageSize, item?.PageSize);
+            Assert.Equal(expectedItems, item?.Items, new FakeModelEqualityComparer());
+            Assert.Equal(expectedTotalCount, item?.TotalCount);
         }
     }
 }

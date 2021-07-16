@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
+[assembly: CLSCompliant(true)]
 namespace GodelTech.Data
 {
     /// <summary>

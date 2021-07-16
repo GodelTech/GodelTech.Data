@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-// ReSharper disable once CheckNamespace
 namespace GodelTech.Data
 {
     /// <summary>
@@ -21,5 +20,10 @@ namespace GodelTech.Data
         /// Gets or sets sort expression.
         /// </summary>
         public Expression<Func<TEntity, object>> Expression { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether there are valid parameters.
+        /// </summary>
+        public bool IsValid => Expression != null;
     }
 }

@@ -17,7 +17,9 @@ namespace GodelTech.Data
         /// </summary>
         /// <param name="queryParameters">Query parameters.</param>
         /// <returns><cref>TEntity</cref>.</returns>
+#pragma warning disable CA1716 // Identifiers should not match keywords
         TEntity Get(QueryParameters<TEntity, TType> queryParameters = null);
+#pragma warning restore CA1716 // Identifiers should not match keywords
 
         /// <summary>
         /// Gets model of type T from repository that satisfies a query parameters.
@@ -26,7 +28,9 @@ namespace GodelTech.Data
         /// <typeparam name="TModel">The type of the T model.</typeparam>
         /// <param name="queryParameters">Query parameters.</param>
         /// <returns><cref>TModel</cref></returns>
+#pragma warning disable CA1716 // Identifiers should not match keywords
         TModel Get<TModel>(QueryParameters<TEntity, TType> queryParameters = null);
+#pragma warning restore CA1716 // Identifiers should not match keywords
 
         /// <summary>
         /// Asynchronously gets entity of type T from repository that satisfies a query parameters.
