@@ -103,17 +103,7 @@ namespace GodelTech.Data.Extensions
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
 
-            return GetInternalAsync(repository, filterExpression);
-        }
-
-        private static async Task<TEntity> GetInternalAsync<TEntity, TType>(
-            this IRepository<TEntity, TType> repository,
-            Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TType>
-        {
-            return await repository.GetAsync(
-                filterExpression.CreateQueryParameters<TEntity, TType>()
-            );
+            return repository.GetInternalAsync(filterExpression);
         }
 
         /// <summary>
@@ -152,17 +142,7 @@ namespace GodelTech.Data.Extensions
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
 
-            return GetInternalAsync<TModel, TEntity, TType>(repository, filterExpression);
-        }
-
-        private static async Task<TModel> GetInternalAsync<TModel, TEntity, TType>(
-            this IRepository<TEntity, TType> repository,
-            Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TType>
-        {
-            return await repository.GetAsync<TModel>(
-                filterExpression.CreateQueryParameters<TEntity, TType>()
-            );
+            return repository.GetInternalAsync<TModel, TEntity, TType>(filterExpression);
         }
 
         /// <summary>
@@ -241,17 +221,7 @@ namespace GodelTech.Data.Extensions
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
 
-            return GetListInternalAsync(repository, filterExpression);
-        }
-
-        private static async Task<IList<TEntity>> GetListInternalAsync<TEntity, TType>(
-            this IRepository<TEntity, TType> repository,
-            Expression<Func<TEntity, bool>> filterExpression = null)
-            where TEntity : class, IEntity<TType>
-        {
-            return await repository.GetListAsync(
-                filterExpression?.CreateQueryParameters<TEntity, TType>()
-            );
+            return repository.GetListInternalAsync(filterExpression);
         }
 
         /// <summary>
@@ -270,17 +240,7 @@ namespace GodelTech.Data.Extensions
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
 
-            return GetListInternalAsync<TModel, TEntity, TType>(repository, filterExpression);
-        }
-
-        private static async Task<IList<TModel>> GetListInternalAsync<TModel, TEntity, TType>(
-            this IRepository<TEntity, TType> repository,
-            Expression<Func<TEntity, bool>> filterExpression = null)
-            where TEntity : class, IEntity<TType>
-        {
-            return await repository.GetListAsync<TModel>(
-                filterExpression?.CreateQueryParameters<TEntity, TType>()
-            );
+            return repository.GetListInternalAsync<TModel, TEntity, TType>(filterExpression);
         }
 
         /// <summary>
@@ -334,17 +294,7 @@ namespace GodelTech.Data.Extensions
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
 
-            return ExistsInternalAsync(repository, filterExpression);
-        }
-
-        private static async Task<bool> ExistsInternalAsync<TEntity, TType>(
-            this IRepository<TEntity, TType> repository,
-            Expression<Func<TEntity, bool>> filterExpression = null)
-            where TEntity : class, IEntity<TType>
-        {
-            return await repository.ExistsAsync(
-                filterExpression?.CreateQueryParameters<TEntity, TType>()
-            );
+            return repository.ExistsInternalAsync(filterExpression);
         }
 
         /// <summary>
@@ -382,6 +332,56 @@ namespace GodelTech.Data.Extensions
             if (entity == null) return;
 
             repository.Delete(entity);
+        }
+
+        private static async Task<TEntity> GetInternalAsync<TEntity, TType>(
+            this IRepository<TEntity, TType> repository,
+            Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class, IEntity<TType>
+        {
+            return await repository.GetAsync(
+                filterExpression.CreateQueryParameters<TEntity, TType>()
+            );
+        }
+
+        private static async Task<TModel> GetInternalAsync<TModel, TEntity, TType>(
+            this IRepository<TEntity, TType> repository,
+            Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class, IEntity<TType>
+        {
+            return await repository.GetAsync<TModel>(
+                filterExpression.CreateQueryParameters<TEntity, TType>()
+            );
+        }
+
+        private static async Task<IList<TEntity>> GetListInternalAsync<TEntity, TType>(
+            this IRepository<TEntity, TType> repository,
+            Expression<Func<TEntity, bool>> filterExpression = null)
+            where TEntity : class, IEntity<TType>
+        {
+            return await repository.GetListAsync(
+                filterExpression?.CreateQueryParameters<TEntity, TType>()
+            );
+        }
+
+        private static async Task<IList<TModel>> GetListInternalAsync<TModel, TEntity, TType>(
+            this IRepository<TEntity, TType> repository,
+            Expression<Func<TEntity, bool>> filterExpression = null)
+            where TEntity : class, IEntity<TType>
+        {
+            return await repository.GetListAsync<TModel>(
+                filterExpression?.CreateQueryParameters<TEntity, TType>()
+            );
+        }
+
+        private static async Task<bool> ExistsInternalAsync<TEntity, TType>(
+            this IRepository<TEntity, TType> repository,
+            Expression<Func<TEntity, bool>> filterExpression = null)
+            where TEntity : class, IEntity<TType>
+        {
+            return await repository.ExistsAsync(
+                filterExpression?.CreateQueryParameters<TEntity, TType>()
+            );
         }
     }
 }
