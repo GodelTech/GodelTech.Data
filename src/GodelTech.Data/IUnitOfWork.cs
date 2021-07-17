@@ -11,15 +11,6 @@ namespace GodelTech.Data
     public interface IUnitOfWork : IDisposable
     {
         /// <summary>
-        /// Gets the repository for specified entity type.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the T entity.</typeparam>
-        /// <typeparam name="TType">The type of the T type.</typeparam>
-        /// <returns>IRepository{TEntity, TType}.</returns>
-        IRepository<TEntity, TType> GetRepository<TEntity, TType>()
-            where TEntity : class, IEntity<TType>;
-
-        /// <summary>
         /// Commits all changes.
         /// </summary>
         /// <returns>Number of rows affected.</returns>
