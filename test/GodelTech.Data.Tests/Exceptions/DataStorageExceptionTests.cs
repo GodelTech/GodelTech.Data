@@ -13,8 +13,8 @@ namespace GodelTech.Data.Tests.Exceptions
     {
         private static readonly ArgumentNullException InnerException = new ArgumentNullException();
 
-        // https://blog.gurock.com/articles/creating-custom-exceptions-in-dotnet/
         [Fact]
+        // https://blog.gurock.com/articles/creating-custom-exceptions-in-dotnet/
         public async Task Constructor_Protected()
         {
             // Arrange
