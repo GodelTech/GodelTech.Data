@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using GodelTech.Data.Extensions;
-using GodelTech.Data.Tests.Fakes.Entities;
+using GodelTech.Data.Tests.Fakes;
 using Xunit;
 
 namespace GodelTech.Data.Tests.Extensions
@@ -15,35 +15,35 @@ namespace GodelTech.Data.Tests.Extensions
             {
                 new object[]
                 {
-                    new FakeGuidEntity(),
+                    new FakeEntity<Guid>(),
                     default(Guid),
                     Guid.Empty,
                     true
                 },
                 new object[]
                 {
-                    new FakeGuidEntity(),
+                    new FakeEntity<Guid>(),
                     default(Guid),
                     new Guid(),
                     true
                 },
                 new object[]
                 {
-                    new FakeGuidEntity(),
+                    new FakeEntity<Guid>(),
                     default(Guid),
                     new Guid("00000000-0000-0000-0000-000000000000"),
                     true
                 },
                 new object[]
                 {
-                    new FakeGuidEntity(),
+                    new FakeEntity<Guid>(),
                     default(Guid),
                     new Guid("762440ed-9876-4805-b00c-4ae53ba734a4"),
                     false
                 },
                 new object[]
                 {
-                    new FakeGuidEntity
+                    new FakeEntity<Guid>
                     {
                         Id = new Guid("00000000-0000-0000-0000-000000000001")
                     },
@@ -53,7 +53,7 @@ namespace GodelTech.Data.Tests.Extensions
                 },
                 new object[]
                 {
-                    new FakeGuidEntity
+                    new FakeEntity<Guid>
                     {
                         Id = new Guid("00000000-0000-0000-0000-000000000002")
                     },
@@ -63,21 +63,21 @@ namespace GodelTech.Data.Tests.Extensions
                 },
                 new object[]
                 {
-                    new FakeIntEntity(),
+                    new FakeEntity<int>(),
                     default(int),
                     0,
                     true
                 },
                 new object[]
                 {
-                    new FakeIntEntity(),
+                    new FakeEntity<int>(),
                     default(int),
                     1,
                     false
                 },
                 new object[]
                 {
-                    new FakeIntEntity
+                    new FakeEntity<int>
                     {
                         Id = 2
                     },
@@ -87,7 +87,7 @@ namespace GodelTech.Data.Tests.Extensions
                 },
                 new object[]
                 {
-                    new FakeIntEntity
+                    new FakeEntity<int>
                     {
                         Id = 3
                     },
@@ -97,28 +97,28 @@ namespace GodelTech.Data.Tests.Extensions
                 },
                 new object[]
                 {
-                    new FakeStringEntity(),
+                    new FakeEntity<string>(),
                     string.Empty,
                     null,
                     true
                 },
                 new object[]
                 {
-                    new FakeStringEntity(),
+                    new FakeEntity<string>(),
                     string.Empty,
                     "",
                     false
                 },
                 new object[]
                 {
-                    new FakeStringEntity(),
+                    new FakeEntity<string>(),
                     string.Empty,
                     "Test Text",
                     false
                 },
                 new object[]
                 {
-                    new FakeStringEntity
+                    new FakeEntity<string>
                     {
                         Id = "Same Test Text"
                     },
@@ -128,7 +128,7 @@ namespace GodelTech.Data.Tests.Extensions
                 },
                 new object[]
                 {
-                    new FakeStringEntity
+                    new FakeEntity<string>
                     {
                         Id = "Test Text"
                     },
@@ -162,14 +162,33 @@ namespace GodelTech.Data.Tests.Extensions
             );
         }
 
-        [Fact]
-        public void CreateQueryParameters_WhenFilterExpressionIsNull_ThrowsArgumentNullException()
+        public static IEnumerable<object[]> TypesMemberData =>
+            new Collection<object[]>
+            {
+                new object[]
+                {
+                    default(Guid)
+                },
+                new object[]
+                {
+                    default(int)
+                },
+                new object[]
+                {
+                    string.Empty
+                }
+            };
+
+        [Theory]
+        [MemberData(nameof(TypesMemberData))]
+        public void CreateQueryParameters_WhenFilterExpressionIsNull_ThrowsArgumentNullException<TType>(TType defaultValue)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
-                () => FilterExpressionExtensions.CreateQueryParameters<FakeGuidEntity, Guid>(null)
+                () => FilterExpressionExtensions.CreateQueryParameters<FakeEntity<TType>, TType>(null)
             );
 
+            Assert.NotNull(defaultValue);
             Assert.Equal("filterExpression", exception.ParamName);
         }
 
@@ -178,19 +197,19 @@ namespace GodelTech.Data.Tests.Extensions
             {
                 new object[]
                 {
-                    new FakeGuidEntity(),
+                    new FakeEntity<Guid>(),
                     default(Guid),
                     null
                 },
                 new object[]
                 {
-                    new FakeIntEntity(),
+                    new FakeEntity<int>(),
                     default(int),
                     null
                 },
                 new object[]
                 {
-                    new FakeStringEntity(),
+                    new FakeEntity<string>(),
                     string.Empty,
                     null
                 }
@@ -201,21 +220,21 @@ namespace GodelTech.Data.Tests.Extensions
             {
                 new object[]
                 {
-                    new FakeGuidEntity(),
+                    new FakeEntity<Guid>(),
                     default(Guid),
-                    (Expression<Func<FakeGuidEntity, bool>>) (entity => entity.Id == new Guid())
+                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Id == new Guid())
                 },
                 new object[]
                 {
-                    new FakeIntEntity(),
+                    new FakeEntity<int>(),
                     default(int),
-                    (Expression<Func<FakeIntEntity, bool>>) (entity => entity.Id == 1)
+                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Id == 1)
                 },
                 new object[]
                 {
-                    new FakeStringEntity(),
+                    new FakeEntity<string>(),
                     string.Empty,
-                    (Expression<Func<FakeStringEntity, bool>>) (entity => entity.Id == "Test Text")
+                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Id == "Test Text")
                 }
             };
 

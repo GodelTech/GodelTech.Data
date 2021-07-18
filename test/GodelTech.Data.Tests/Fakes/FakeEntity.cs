@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace GodelTech.Data.Tests.Fakes.Entities
+﻿namespace GodelTech.Data.Tests.Fakes
 {
-    public class FakeGuidEntity : IEntity<Guid>
+    public class FakeEntity<TType> : IEntity<TType>
     {
-        public Guid Id { get; set; }
+        public TType Id { get; set; }
 
-        public bool Equals(IEntity<Guid> x, IEntity<Guid> y)
+        public bool Equals(IEntity<TType> x, IEntity<TType> y)
         {
             // Check whether the compared objects reference the same data
             if (ReferenceEquals(x, y)) return true;
@@ -15,10 +13,10 @@ namespace GodelTech.Data.Tests.Fakes.Entities
             if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
 
             // Check whether the objects' properties are equal.
-            return x.Id == y.Id;
+            return x.Id.Equals(y.Id);
         }
 
-        public int GetHashCode(IEntity<Guid> obj)
+        public int GetHashCode(IEntity<TType> obj)
         {
             // Check whether the object is null
             if (ReferenceEquals(obj, null)) return 0;

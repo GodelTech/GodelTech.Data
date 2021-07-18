@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using GodelTech.Data.Extensions;
 using GodelTech.Data.Tests.Fakes;
-using GodelTech.Data.Tests.Fakes.Entities;
 using Moq;
 using Xunit;
 
@@ -12,12 +11,13 @@ namespace GodelTech.Data.Tests.Extensions
 {
     public partial class RepositoryExtensionsAsyncTests
     {
-        [Fact]
-        public async Task GetListAsync_WhenRepositoryIsNull_ThrowsArgumentNullException()
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetListAsync_WhenRepositoryIsNull_ThrowsArgumentNullException<TType>(TType defaultValue)
         {
             // Arrange & Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => RepositoryExtensions.GetListAsync<FakeIntEntity, int>(null, x => x.Id == 1)
+                () => RepositoryExtensions.GetListAsync<FakeEntity<TType>, TType>(null, x => x.Id.Equals(defaultValue))
             );
 
             Assert.Equal("repository", exception.ParamName);
@@ -65,12 +65,13 @@ namespace GodelTech.Data.Tests.Extensions
             Assert.Equal(list, result);
         }
 
-        [Fact]
-        public async Task GetListModelAsync_WhenRepositoryIsNull_ThrowsArgumentNullException()
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetListModelAsync_WhenRepositoryIsNull_ThrowsArgumentNullException<TType>(TType defaultValue)
         {
             // Arrange & Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => RepositoryExtensions.GetListAsync<FakeModel, FakeIntEntity, int>(null, x => x.Id == 1)
+                () => RepositoryExtensions.GetListAsync<FakeModel, FakeEntity<TType>, TType>(null, x => x.Id.Equals(defaultValue))
             );
 
             Assert.Equal("repository", exception.ParamName);
