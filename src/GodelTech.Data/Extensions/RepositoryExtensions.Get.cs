@@ -11,19 +11,19 @@ namespace GodelTech.Data.Extensions
         /// If no entity is found, then null is returned.
         /// </summary>
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
-        /// <typeparam name="TType">The type of the T type.</typeparam>
+        /// <typeparam name="TKey">The type of the T key.</typeparam>
         /// <param name="repository">The repository.</param>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns><cref>TEntity</cref>.</returns>
-        public static TEntity Get<TEntity, TType>(
-            this IRepository<TEntity, TType> repository,
+        public static TEntity Get<TEntity, TKey>(
+            this IRepository<TEntity, TKey> repository,
             Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
 
             return repository.Get(
-                filterExpression.CreateQueryParameters<TEntity, TType>()
+                filterExpression.CreateQueryParameters<TEntity, TKey>()
             );
         }
 
@@ -34,12 +34,12 @@ namespace GodelTech.Data.Extensions
         /// <param name="repository">The repository.</param>
         /// <param name="id">The identifier.</param>
         /// <returns><cref>TEntity</cref>.</returns>
-        public static TEntity Get<TEntity, TType>(
-            this IRepository<TEntity, TType> repository, TType id)
-            where TEntity : class, IEntity<TType>
+        public static TEntity Get<TEntity, TKey>(
+            this IRepository<TEntity, TKey> repository, TKey id)
+            where TEntity : class, IEntity<TKey>
         {
             return repository.Get(
-                FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TType>(id)
+                FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>(id)
             );
         }
 
@@ -49,19 +49,19 @@ namespace GodelTech.Data.Extensions
         /// </summary>
         /// <typeparam name="TModel">The type of the T model.</typeparam>
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
-        /// <typeparam name="TType">The type of the T type.</typeparam>
+        /// <typeparam name="TKey">The type of the T key.</typeparam>
         /// <param name="repository">The repository.</param>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns><cref>TModel</cref></returns>
-        public static TModel Get<TModel, TEntity, TType>(
-            this IRepository<TEntity, TType> repository,
+        public static TModel Get<TModel, TEntity, TKey>(
+            this IRepository<TEntity, TKey> repository,
             Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
 
             return repository.Get<TModel>(
-                filterExpression.CreateQueryParameters<TEntity, TType>()
+                filterExpression.CreateQueryParameters<TEntity, TKey>()
             );
         }
 
@@ -71,15 +71,15 @@ namespace GodelTech.Data.Extensions
         /// </summary>
         /// <typeparam name="TModel">The type of the T model.</typeparam>
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
-        /// <typeparam name="TType">The type of the T type.</typeparam>
+        /// <typeparam name="TKey">The type of the T key.</typeparam>
         /// <param name="repository">The repository.</param>
         /// <param name="id">The identifier.</param>
         /// <returns><cref>TModel</cref></returns>
-        public static TModel Get<TModel, TEntity, TType>(this IRepository<TEntity, TType> repository, TType id)
-            where TEntity : class, IEntity<TType>
+        public static TModel Get<TModel, TEntity, TKey>(this IRepository<TEntity, TKey> repository, TKey id)
+            where TEntity : class, IEntity<TKey>
         {
-            return repository.Get<TModel, TEntity, TType>(
-                FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TType>(id)
+            return repository.Get<TModel, TEntity, TKey>(
+                FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>(id)
             );
         }
 
@@ -88,14 +88,14 @@ namespace GodelTech.Data.Extensions
         /// If no entity is found, then null is returned.
         /// </summary>
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
-        /// <typeparam name="TType">The type of the T type.</typeparam>
+        /// <typeparam name="TKey">The type of the T key.</typeparam>
         /// <param name="repository">The repository.</param>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns><cref>Task{TEntity}</cref>.</returns>
-        public static Task<TEntity> GetAsync<TEntity, TType>(
-            this IRepository<TEntity, TType> repository,
+        public static Task<TEntity> GetAsync<TEntity, TKey>(
+            this IRepository<TEntity, TKey> repository,
             Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
 
@@ -107,17 +107,17 @@ namespace GodelTech.Data.Extensions
         /// If no entity is found, then null is returned.
         /// </summary>
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
-        /// <typeparam name="TType">The type of the T type.</typeparam>
+        /// <typeparam name="TKey">The type of the T key.</typeparam>
         /// <param name="repository">The repository.</param>
         /// <param name="id">The identifier.</param>
         /// <returns><cref>Task{TEntity}</cref>.</returns>
-        public static async Task<TEntity> GetAsync<TEntity, TType>(
-            this IRepository<TEntity, TType> repository,
-            TType id)
-            where TEntity : class, IEntity<TType>
+        public static async Task<TEntity> GetAsync<TEntity, TKey>(
+            this IRepository<TEntity, TKey> repository,
+            TKey id)
+            where TEntity : class, IEntity<TKey>
         {
             return await repository.GetAsync(
-                FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TType>(id)
+                FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>(id)
             );
         }
 
@@ -127,18 +127,18 @@ namespace GodelTech.Data.Extensions
         /// </summary>
         /// <typeparam name="TModel">The type of the T model.</typeparam>
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
-        /// <typeparam name="TType">The type of the T type.</typeparam>
+        /// <typeparam name="TKey">The type of the T key.</typeparam>
         /// <param name="repository">The repository.</param>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns><cref>Task{TModel}</cref>.</returns>
-        public static Task<TModel> GetAsync<TModel, TEntity, TType>(
-            this IRepository<TEntity, TType> repository,
+        public static Task<TModel> GetAsync<TModel, TEntity, TKey>(
+            this IRepository<TEntity, TKey> repository,
             Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
 
-            return repository.GetInternalAsync<TModel, TEntity, TType>(filterExpression);
+            return repository.GetInternalAsync<TModel, TEntity, TKey>(filterExpression);
         }
 
         /// <summary>
@@ -147,37 +147,37 @@ namespace GodelTech.Data.Extensions
         /// </summary>
         /// <typeparam name="TModel">The type of the T model.</typeparam>
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
-        /// <typeparam name="TType">The type of the T type.</typeparam>
+        /// <typeparam name="TKey">The type of the T key.</typeparam>
         /// <param name="repository">The repository.</param>
         /// <param name="id">The identifier.</param>
         /// <returns><cref>Task{TModel}</cref>.</returns>
-        public static async Task<TModel> GetAsync<TModel, TEntity, TType>(
-            this IRepository<TEntity, TType> repository,
-            TType id)
-            where TEntity : class, IEntity<TType>
+        public static async Task<TModel> GetAsync<TModel, TEntity, TKey>(
+            this IRepository<TEntity, TKey> repository,
+            TKey id)
+            where TEntity : class, IEntity<TKey>
         {
-            return await repository.GetAsync<TModel, TEntity, TType>(
-                FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TType>(id)
+            return await repository.GetAsync<TModel, TEntity, TKey>(
+                FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>(id)
             );
         }
 
-        private static async Task<TEntity> GetInternalAsync<TEntity, TType>(
-            this IRepository<TEntity, TType> repository,
+        private static async Task<TEntity> GetInternalAsync<TEntity, TKey>(
+            this IRepository<TEntity, TKey> repository,
             Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             return await repository.GetAsync(
-                filterExpression.CreateQueryParameters<TEntity, TType>()
+                filterExpression.CreateQueryParameters<TEntity, TKey>()
             );
         }
 
-        private static async Task<TModel> GetInternalAsync<TModel, TEntity, TType>(
-            this IRepository<TEntity, TType> repository,
+        private static async Task<TModel> GetInternalAsync<TModel, TEntity, TKey>(
+            this IRepository<TEntity, TKey> repository,
             Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             return await repository.GetAsync<TModel>(
-                filterExpression.CreateQueryParameters<TEntity, TType>()
+                filterExpression.CreateQueryParameters<TEntity, TKey>()
             );
         }
     }

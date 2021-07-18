@@ -2,7 +2,6 @@
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using GodelTech.Data.Extensions;
-using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Neleus.LambdaCompare;
 using Xunit;
@@ -13,11 +12,11 @@ namespace GodelTech.Data.Tests.Extensions
     {
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task ExistsAsync_WhenRepositoryIsNull_ThrowsArgumentNullException<TType>(TType defaultValue)
+        public async Task ExistsAsync_WhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultValue)
         {
             // Arrange & Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => RepositoryExtensions.ExistsAsync<FakeEntity<TType>, TType>(null, x => x.Id.Equals(defaultValue))
+                () => RepositoryExtensions.ExistsAsync<IEntity<TKey>, TKey>(null, x => x.Id.Equals(defaultValue))
             );
 
             Assert.Equal("repository", exception.ParamName);
@@ -26,19 +25,19 @@ namespace GodelTech.Data.Tests.Extensions
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
         [MemberData(nameof(FilterExpressionExtensionsTests.NullFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task ExistsAsync_ByFilterExpression_ReturnsEntity<TEntity, TType>(
+        public async Task ExistsAsync_ByFilterExpression_ReturnsEntity<TEntity, TKey>(
+            TKey defaultKey,
             TEntity entity,
-            TType defaultValue,
             Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             // Arrange
-            var mockRepository = new Mock<IRepository<TEntity, TType>>(MockBehavior.Strict);
+            var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
 
             mockRepository
                 .Setup(
                     x => x.ExistsAsync(
-                        It.Is<QueryParameters<TEntity, TType>>(
+                        It.Is<QueryParameters<TEntity, TKey>>(
                             y =>
                                 filterExpression == null && y == null
                                 || y.Filter.Expression == filterExpression
@@ -57,7 +56,7 @@ namespace GodelTech.Data.Tests.Extensions
             // Assert
             if (entity != null && entity.Id != null)
             {
-                Assert.IsType(defaultValue.GetType(), entity.Id);
+                Assert.IsType(defaultKey.GetType(), entity.Id);
             }
 
             Assert.True(result);
@@ -65,22 +64,22 @@ namespace GodelTech.Data.Tests.Extensions
 
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task ExistsAsync_ById_ReturnsEntity<TEntity, TType>(
+        public async Task ExistsAsync_ById_ReturnsEntity<TEntity, TKey>(
+            TKey defaultKey,
             TEntity entity,
-            TType defaultValue,
             object id,
             bool expectedResult)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             // Arrange
-            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TType>((TType) id);
+            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>((TKey) id);
 
-            var mockRepository = new Mock<IRepository<TEntity, TType>>(MockBehavior.Strict);
+            var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
 
             mockRepository
                 .Setup(
                     x => x.ExistsAsync(
-                        It.Is<QueryParameters<TEntity, TType>>(
+                        It.Is<QueryParameters<TEntity, TKey>>(
                             y => Lambda.Eq(
                                      y.Filter.Expression,
                                      filterExpression
@@ -95,12 +94,12 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            var result = await repository.ExistsAsync((TType) id);
+            var result = await repository.ExistsAsync((TKey) id);
 
             // Assert
             if (id != null)
             {
-                Assert.IsType(defaultValue.GetType(), id);
+                Assert.IsType(defaultKey.GetType(), id);
             }
 
             Assert.Equal(

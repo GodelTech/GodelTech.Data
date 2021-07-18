@@ -8,11 +8,11 @@ namespace GodelTech.Data.Extensions
         /// Deletes the specified entity by identifier.
         /// </summary>
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
-        /// <typeparam name="TType">The type of the T type.</typeparam>
+        /// <typeparam name="TKey">The type of the T key.</typeparam>
         /// <param name="repository">The repository.</param>
         /// <param name="id">The identifier.</param>
-        public static void Delete<TEntity, TType>(this IRepository<TEntity, TType> repository, TType id)
-            where TEntity : class, IEntity<TType>
+        public static void Delete<TEntity, TKey>(this IRepository<TEntity, TKey> repository, TKey id)
+            where TEntity : class, IEntity<TKey>
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
 

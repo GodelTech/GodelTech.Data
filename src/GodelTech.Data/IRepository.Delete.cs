@@ -2,8 +2,7 @@ using System.Collections.Generic;
 
 namespace GodelTech.Data
 {
-    public partial interface IRepository<TEntity, TType>
-        where TEntity : class, IEntity<TType>
+    public partial interface IRepository<TEntity, TKey>
     {
         /// <summary>
         /// Deletes the specified entity.
@@ -15,6 +14,6 @@ namespace GodelTech.Data
         /// Deletes range of entities by their ids.
         /// </summary>
         /// <param name="ids">List of entities ids.</param>
-        void Delete(IEnumerable<TType> ids);
+        void Delete(IEnumerable<TKey> ids);
     }
 }

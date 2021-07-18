@@ -13,16 +13,16 @@ namespace GodelTech.Data.Extensions
         /// Creates filter expression by id.
         /// </summary>
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
-        /// <typeparam name="TType">The type of the T type.</typeparam>
+        /// <typeparam name="TKey">The type of the T key.</typeparam>
         /// <param name="id">The identifier.</param>
         /// <returns><cref>Expression{Func{TEntity, bool}}</cref>.</returns>
-        public static Expression<Func<TEntity, bool>> CreateIdFilterExpression<TEntity, TType>(TType id)
-            where TEntity : class, IEntity<TType>
+        public static Expression<Func<TEntity, bool>> CreateIdFilterExpression<TEntity, TKey>(TKey id)
+            where TEntity : class, IEntity<TKey>
         {
-            Expression<Func<TEntity, TType>> property = x => x.Id;
+            Expression<Func<TEntity, TKey>> property = x => x.Id;
 
             var leftExpression = property.Body;
-            var rightExpression = Expression.Constant(id, typeof(TType));
+            var rightExpression = Expression.Constant(id, typeof(TKey));
 
             return Expression.Lambda<Func<TEntity, bool>>(
                 Expression.Equal(leftExpression, rightExpression),
@@ -34,18 +34,18 @@ namespace GodelTech.Data.Extensions
         /// Creates new query parameters for filter expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the T entity.</typeparam>
-        /// <typeparam name="TType">The type of the T type.</typeparam>
+        /// <typeparam name="TKey">The type of the T key.</typeparam>
         /// <param name="filterExpression">The filter expression.</param>
         /// <returns><cref>QueryParameters</cref>.</returns>
-        public static QueryParameters<TEntity, TType> CreateQueryParameters<TEntity, TType>(
+        public static QueryParameters<TEntity, TKey> CreateQueryParameters<TEntity, TKey>(
             this Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             if (filterExpression == null) throw new ArgumentNullException(nameof(filterExpression));
 
-            return new QueryParameters<TEntity, TType>
+            return new QueryParameters<TEntity, TKey>
             {
-                Filter = new FilterRule<TEntity, TType>
+                Filter = new FilterRule<TEntity, TKey>
                 {
                     Expression = filterExpression
                 }

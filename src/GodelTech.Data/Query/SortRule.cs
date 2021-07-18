@@ -7,9 +7,9 @@ namespace GodelTech.Data
     /// Sort rule class.
     /// </summary>
     /// <typeparam name="TEntity">The type of the T entity.</typeparam>
-    /// <typeparam name="TType">The type of the T type.</typeparam>
-    public class SortRule<TEntity, TType>
-        where TEntity : class, IEntity<TType>
+    /// <typeparam name="TKey">The type of the T key.</typeparam>
+    public class SortRule<TEntity, TKey>
+        where TEntity : class, IEntity<TKey>
     {
         /// <summary>
         /// Gets or sets sort order.

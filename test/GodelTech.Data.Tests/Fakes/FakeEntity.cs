@@ -1,10 +1,10 @@
 ﻿namespace GodelTech.Data.Tests.Fakes
 {
-    public class FakeEntity<TType> : IEntity<TType>
+    public class FakeEntity<TKey> : IEntity<TKey>
     {
-        public TType Id { get; set; }
+        public TKey Id { get; set; }
 
-        public bool Equals(IEntity<TType> x, IEntity<TType> y)
+        public bool Equals(IEntity<TKey> x, IEntity<TKey> y)
         {
             // Check whether the compared objects reference the same data
             if (ReferenceEquals(x, y)) return true;
@@ -16,7 +16,7 @@
             return x.Id.Equals(y.Id);
         }
 
-        public int GetHashCode(IEntity<TType> obj)
+        public int GetHashCode(IEntity<TKey> obj)
         {
             // Check whether the object is null
             if (ReferenceEquals(obj, null)) return 0;

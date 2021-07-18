@@ -3,8 +3,7 @@ using System.Threading.Tasks;
 
 namespace GodelTech.Data
 {
-    public partial interface IRepository<TEntity, TType>
-        where TEntity : class, IEntity<TType>
+    public partial interface IRepository<TEntity, TKey>
     {
         /// <summary>
         /// Inserts entity in the repository.
