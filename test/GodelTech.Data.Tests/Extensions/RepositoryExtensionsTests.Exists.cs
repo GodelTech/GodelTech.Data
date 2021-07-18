@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using GodelTech.Data.Extensions;
-using GodelTech.Data.Tests.Fakes.Entities;
+using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Neleus.LambdaCompare;
 using Xunit;
@@ -10,12 +10,13 @@ namespace GodelTech.Data.Tests.Extensions
 {
     public partial class RepositoryExtensionsTests
     {
-        [Fact]
-        public void Exists_WhenRepositoryIsNull_ThrowsArgumentNullException()
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Exists_WhenRepositoryIsNull_ThrowsArgumentNullException<TType>(TType defaultValue)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
-                () => RepositoryExtensions.Exists<FakeIntEntity, int>(null, x => x.Id == 1)
+                () => RepositoryExtensions.Exists<FakeEntity<TType>, TType>(null, x => x.Id.Equals(defaultValue))
             );
 
             Assert.Equal("repository", exception.ParamName);

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using GodelTech.Data.Tests.Fakes.Entities;
+using GodelTech.Data.Tests.Fakes;
 using Xunit;
 
 namespace GodelTech.Data.Tests.Query
@@ -13,12 +13,12 @@ namespace GodelTech.Data.Tests.Query
             {
                 new object[]
                 {
-                    new SortRule<FakeGuidEntity, Guid>(),
+                    new SortRule<FakeEntity<Guid>, Guid>(),
                     SortOrder.Ascending
                 },
                 new object[]
                 {
-                    new SortRule<FakeGuidEntity, Guid>
+                    new SortRule<FakeEntity<int>, int>
                     {
                         SortOrder = SortOrder.Ascending
                     },
@@ -26,7 +26,7 @@ namespace GodelTech.Data.Tests.Query
                 },
                 new object[]
                 {
-                    new SortRule<FakeGuidEntity, Guid>
+                    new SortRule<FakeEntity<string>, string>
                     {
                         SortOrder = SortOrder.Descending
                     },
@@ -36,8 +36,8 @@ namespace GodelTech.Data.Tests.Query
 
         [Theory]
         [MemberData(nameof(SortOrderMemberData))]
-        public void SortOrder_Success(
-            SortRule<FakeGuidEntity, Guid> sortRule,
+        public void SortOrder_Success<TType>(
+            SortRule<FakeEntity<TType>, TType> sortRule,
             SortOrder expectedSortOrder)
         {
             // Arrange & Act & Assert
@@ -49,12 +49,12 @@ namespace GodelTech.Data.Tests.Query
             {
                 new object[]
                 {
-                    new SortRule<FakeGuidEntity, Guid>(),
+                    new SortRule<FakeEntity<Guid>, Guid>(),
                     false
                 },
                 new object[]
                 {
-                    new SortRule<FakeGuidEntity, Guid>
+                    new SortRule<FakeEntity<Guid>, Guid>
                     {
                         Expression = null
                     },
@@ -62,7 +62,7 @@ namespace GodelTech.Data.Tests.Query
                 },
                 new object[]
                 {
-                    new SortRule<FakeGuidEntity, Guid>
+                    new SortRule<FakeEntity<Guid>, Guid>
                     {
                         Expression = entity => entity.Id
                     },
@@ -70,12 +70,12 @@ namespace GodelTech.Data.Tests.Query
                 },
                 new object[]
                 {
-                    new SortRule<FakeIntEntity, int>(),
+                    new SortRule<FakeEntity<int>, int>(),
                     false
                 },
                 new object[]
                 {
-                    new SortRule<FakeIntEntity, int>
+                    new SortRule<FakeEntity<int>, int>
                     {
                         Expression = null
                     },
@@ -83,7 +83,7 @@ namespace GodelTech.Data.Tests.Query
                 },
                 new object[]
                 {
-                    new SortRule<FakeIntEntity, int>
+                    new SortRule<FakeEntity<int>, int>
                     {
                         Expression = entity => entity.Id
                     },
@@ -91,12 +91,12 @@ namespace GodelTech.Data.Tests.Query
                 },
                 new object[]
                 {
-                    new SortRule<FakeStringEntity, string>(),
+                    new SortRule<FakeEntity<string>, string>(),
                     false
                 },
                 new object[]
                 {
-                    new SortRule<FakeStringEntity, string>
+                    new SortRule<FakeEntity<string>, string>
                     {
                         Expression = null
                     },
@@ -104,7 +104,7 @@ namespace GodelTech.Data.Tests.Query
                 },
                 new object[]
                 {
-                    new SortRule<FakeStringEntity, string>
+                    new SortRule<FakeEntity<string>, string>
                     {
                         Expression = entity => entity.Id
                     },

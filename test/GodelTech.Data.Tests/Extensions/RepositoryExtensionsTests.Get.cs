@@ -2,7 +2,6 @@
 using System.Linq.Expressions;
 using GodelTech.Data.Extensions;
 using GodelTech.Data.Tests.Fakes;
-using GodelTech.Data.Tests.Fakes.Entities;
 using Moq;
 using Neleus.LambdaCompare;
 using Xunit;
@@ -11,12 +10,13 @@ namespace GodelTech.Data.Tests.Extensions
 {
     public partial class RepositoryExtensionsTests
     {
-        [Fact]
-        public void Get_WhenRepositoryIsNull_ThrowsArgumentNullException()
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Get_WhenRepositoryIsNull_ThrowsArgumentNullException<TType>(TType defaultValue)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
-                () => RepositoryExtensions.Get<FakeIntEntity, int>(null, x => x.Id == 1)
+                () => RepositoryExtensions.Get<FakeEntity<TType>, TType>(null, x => x.Id.Equals(defaultValue))
             );
 
             Assert.Equal("repository", exception.ParamName);
@@ -107,12 +107,13 @@ namespace GodelTech.Data.Tests.Extensions
             Assert.Equal(entity, result);
         }
 
-        [Fact]
-        public void GetModel_WhenRepositoryIsNull_ThrowsArgumentNullException()
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void GetModel_WhenRepositoryIsNull_ThrowsArgumentNullException<TType>(TType defaultValue)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
-                () => RepositoryExtensions.Get<FakeModel, FakeIntEntity, int>(null, x => x.Id == 1)
+                () => RepositoryExtensions.Get<FakeModel, FakeEntity<TType>, TType>(null, x => x.Id.Equals(defaultValue))
             );
 
             Assert.Equal("repository", exception.ParamName);

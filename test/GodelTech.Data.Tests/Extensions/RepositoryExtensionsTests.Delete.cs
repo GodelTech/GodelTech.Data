@@ -1,6 +1,6 @@
 ﻿using System;
 using GodelTech.Data.Extensions;
-using GodelTech.Data.Tests.Fakes.Entities;
+using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Neleus.LambdaCompare;
 using Xunit;
@@ -9,12 +9,13 @@ namespace GodelTech.Data.Tests.Extensions
 {
     public partial class RepositoryExtensionsTests
     {
-        [Fact]
-        public void Delete_WhenRepositoryIsNull_ThrowsArgumentNullException()
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Delete_WhenRepositoryIsNull_ThrowsArgumentNullException<TType>(TType defaultValue)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
-                () => RepositoryExtensions.Delete<FakeIntEntity, int>(null, 1)
+                () => RepositoryExtensions.Delete<FakeEntity<TType>, TType>(null, defaultValue)
             );
 
             Assert.Equal("repository", exception.ParamName);
