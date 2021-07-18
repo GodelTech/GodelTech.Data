@@ -13,126 +13,129 @@ namespace GodelTech.Data.Tests.Extensions
         public static IEnumerable<object[]> CreateIdFilterExpressionMemberData =>
             new Collection<object[]>
             {
+                // Guid
                 new object[]
                 {
-                    new FakeEntity<Guid>(),
                     default(Guid),
+                    new FakeEntity<Guid>(),
                     Guid.Empty,
                     true
                 },
                 new object[]
                 {
-                    new FakeEntity<Guid>(),
                     default(Guid),
+                    new FakeEntity<Guid>(),
                     new Guid(),
                     true
                 },
                 new object[]
                 {
-                    new FakeEntity<Guid>(),
                     default(Guid),
+                    new FakeEntity<Guid>(),
                     new Guid("00000000-0000-0000-0000-000000000000"),
                     true
                 },
                 new object[]
                 {
-                    new FakeEntity<Guid>(),
                     default(Guid),
+                    new FakeEntity<Guid>(),
                     new Guid("762440ed-9876-4805-b00c-4ae53ba734a4"),
                     false
                 },
                 new object[]
                 {
+                    default(Guid),
                     new FakeEntity<Guid>
                     {
                         Id = new Guid("00000000-0000-0000-0000-000000000001")
                     },
-                    default(Guid),
                     new Guid("00000000-0000-0000-0000-000000000001"),
                     true
                 },
                 new object[]
                 {
+                    default(Guid),
                     new FakeEntity<Guid>
                     {
                         Id = new Guid("00000000-0000-0000-0000-000000000002")
                     },
-                    default(Guid),
                     new Guid("00000000-0000-0000-0000-000000000003"),
                     false
                 },
+                // int
                 new object[]
                 {
-                    new FakeEntity<int>(),
                     default(int),
+                    new FakeEntity<int>(),
                     0,
                     true
                 },
                 new object[]
                 {
-                    new FakeEntity<int>(),
                     default(int),
+                    new FakeEntity<int>(),
                     1,
                     false
                 },
                 new object[]
                 {
+                    default(int),
                     new FakeEntity<int>
                     {
                         Id = 2
                     },
-                    default(int),
                     2,
                     true
                 },
                 new object[]
                 {
+                    default(int),
                     new FakeEntity<int>
                     {
                         Id = 3
                     },
-                    default(int),
                     4,
                     false
                 },
+                // string
                 new object[]
                 {
-                    new FakeEntity<string>(),
                     string.Empty,
+                    new FakeEntity<string>(),
                     null,
                     true
                 },
                 new object[]
                 {
-                    new FakeEntity<string>(),
                     string.Empty,
+                    new FakeEntity<string>(),
                     "",
                     false
                 },
                 new object[]
                 {
-                    new FakeEntity<string>(),
                     string.Empty,
+                    new FakeEntity<string>(),
                     "Test Text",
                     false
                 },
                 new object[]
                 {
+                    string.Empty,
                     new FakeEntity<string>
                     {
                         Id = "Same Test Text"
                     },
-                    string.Empty,
                     "Same Test Text",
                     true
                 },
                 new object[]
                 {
+                    string.Empty,
                     new FakeEntity<string>
                     {
                         Id = "Test Text"
                     },
-                    string.Empty,
                     "Other Test Text",
                     false
                 }
@@ -140,20 +143,20 @@ namespace GodelTech.Data.Tests.Extensions
 
         [Theory]
         [MemberData(nameof(CreateIdFilterExpressionMemberData))]
-        public void CreateIdFilterExpression<TEntity, TType>(
+        public void CreateIdFilterExpression<TEntity, TKey>(
+            TKey defaultKey,
             TEntity entity,
-            TType defaultValue,
             object id,
             bool expectedResult)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             // Arrange & Act
-            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TType>((TType) id);
+            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>((TKey) id);
 
             // Assert
             if (id != null)
             {
-                Assert.IsType(defaultValue.GetType(), id);
+                Assert.IsType(defaultKey.GetType(), id);
             }
 
             Assert.Equal(
@@ -165,14 +168,17 @@ namespace GodelTech.Data.Tests.Extensions
         public static IEnumerable<object[]> TypesMemberData =>
             new Collection<object[]>
             {
+                // Guid
                 new object[]
                 {
                     default(Guid)
                 },
+                // int
                 new object[]
                 {
                     default(int)
                 },
+                // string
                 new object[]
                 {
                     string.Empty
@@ -181,11 +187,11 @@ namespace GodelTech.Data.Tests.Extensions
 
         [Theory]
         [MemberData(nameof(TypesMemberData))]
-        public void CreateQueryParameters_WhenFilterExpressionIsNull_ThrowsArgumentNullException<TType>(TType defaultValue)
+        public void CreateQueryParameters_WhenFilterExpressionIsNull_ThrowsArgumentNullException<TKey>(TKey defaultValue)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
-                () => FilterExpressionExtensions.CreateQueryParameters<FakeEntity<TType>, TType>(null)
+                () => FilterExpressionExtensions.CreateQueryParameters<IEntity<TKey>, TKey>(null)
             );
 
             Assert.NotNull(defaultValue);
@@ -195,22 +201,25 @@ namespace GodelTech.Data.Tests.Extensions
         public static IEnumerable<object[]> NullFilterExpressionMemberData =>
             new Collection<object[]>
             {
+                // Guid
                 new object[]
                 {
-                    new FakeEntity<Guid>(),
                     default(Guid),
+                    new FakeEntity<Guid>(),
                     null
                 },
+                // int
                 new object[]
                 {
-                    new FakeEntity<int>(),
                     default(int),
+                    new FakeEntity<int>(),
                     null
                 },
+                // string
                 new object[]
                 {
-                    new FakeEntity<string>(),
                     string.Empty,
+                    new FakeEntity<string>(),
                     null
                 }
             };
@@ -218,41 +227,44 @@ namespace GodelTech.Data.Tests.Extensions
         public static IEnumerable<object[]> FilterExpressionMemberData =>
             new Collection<object[]>
             {
+                // Guid
                 new object[]
                 {
-                    new FakeEntity<Guid>(),
                     default(Guid),
+                    new FakeEntity<Guid>(),
                     (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Id == new Guid())
                 },
+                // int
                 new object[]
                 {
-                    new FakeEntity<int>(),
                     default(int),
+                    new FakeEntity<int>(),
                     (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Id == 1)
                 },
+                // string
                 new object[]
                 {
-                    new FakeEntity<string>(),
                     string.Empty,
+                    new FakeEntity<string>(),
                     (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Id == "Test Text")
                 }
             };
 
         [Theory]
         [MemberData(nameof(FilterExpressionMemberData))]
-        public void CreateQueryParameters_ReturnsQueryParameters<TEntity, TType>(
+        public void CreateQueryParameters_ReturnsQueryParameters<TEntity, TKey>(
+            TKey defaultKey,
             TEntity entity,
-            TType defaultValue,
             Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             // Arrange & Act
-            var result = filterExpression.CreateQueryParameters<TEntity, TType>();
+            var result = filterExpression.CreateQueryParameters<TEntity, TKey>();
 
             // Assert
             if (entity != null && entity.Id != null)
             {
-                Assert.IsType(defaultValue.GetType(), entity.Id);
+                Assert.IsType(defaultKey.GetType(), entity.Id);
             }
 
             Assert.Equal(result.Filter.Expression, filterExpression);

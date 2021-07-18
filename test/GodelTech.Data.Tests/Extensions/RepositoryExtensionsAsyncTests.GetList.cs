@@ -13,11 +13,11 @@ namespace GodelTech.Data.Tests.Extensions
     {
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task GetListAsync_WhenRepositoryIsNull_ThrowsArgumentNullException<TType>(TType defaultValue)
+        public async Task GetListAsync_WhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => RepositoryExtensions.GetListAsync<FakeEntity<TType>, TType>(null, x => x.Id.Equals(defaultValue))
+                () => RepositoryExtensions.GetListAsync<IEntity<TKey>, TKey>(null, x => x.Id.Equals(defaultKey))
             );
 
             Assert.Equal("repository", exception.ParamName);
@@ -26,21 +26,21 @@ namespace GodelTech.Data.Tests.Extensions
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
         [MemberData(nameof(FilterExpressionExtensionsTests.NullFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task GetListAsync_ByFilterExpression_ReturnsEntity<TEntity, TType>(
+        public async Task GetListAsync_ByFilterExpression_ReturnsEntity<TEntity, TKey>(
+            TKey defaultKey,
             TEntity entity,
-            TType defaultValue,
             Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             // Arrange
             var list = new List<TEntity>();
 
-            var mockRepository = new Mock<IRepository<TEntity, TType>>(MockBehavior.Strict);
+            var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
 
             mockRepository
                 .Setup(
                     x => x.GetListAsync(
-                        It.Is<QueryParameters<TEntity, TType>>(
+                        It.Is<QueryParameters<TEntity, TKey>>(
                             y =>
                                 filterExpression == null && y == null
                                 || y.Filter.Expression == filterExpression
@@ -59,7 +59,7 @@ namespace GodelTech.Data.Tests.Extensions
             // Assert
             if (entity != null && entity.Id != null)
             {
-                Assert.IsType(defaultValue.GetType(), entity.Id);
+                Assert.IsType(defaultKey.GetType(), entity.Id);
             }
 
             Assert.Equal(list, result);
@@ -67,11 +67,11 @@ namespace GodelTech.Data.Tests.Extensions
 
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task GetListModelAsync_WhenRepositoryIsNull_ThrowsArgumentNullException<TType>(TType defaultValue)
+        public async Task GetListModelAsync_WhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => RepositoryExtensions.GetListAsync<FakeModel, FakeEntity<TType>, TType>(null, x => x.Id.Equals(defaultValue))
+                () => RepositoryExtensions.GetListAsync<FakeModel, IEntity<TKey>, TKey>(null, x => x.Id.Equals(defaultKey))
             );
 
             Assert.Equal("repository", exception.ParamName);
@@ -80,21 +80,21 @@ namespace GodelTech.Data.Tests.Extensions
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
         [MemberData(nameof(FilterExpressionExtensionsTests.NullFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task GetListModelAsync_ByFilterExpression_ReturnsEntity<TEntity, TType>(
+        public async Task GetListModelAsync_ByFilterExpression_ReturnsEntity<TEntity, TKey>(
+            TKey defaultKey,
             TEntity entity,
-            TType defaultValue,
             Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             // Arrange
             var list = new List<FakeModel>();
 
-            var mockRepository = new Mock<IRepository<TEntity, TType>>(MockBehavior.Strict);
+            var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
 
             mockRepository
                 .Setup(
                     x => x.GetListAsync<FakeModel>(
-                        It.Is<QueryParameters<TEntity, TType>>(
+                        It.Is<QueryParameters<TEntity, TKey>>(
                             y =>
                                 filterExpression == null && y == null
                                 || y.Filter.Expression == filterExpression
@@ -108,12 +108,12 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            var result = await repository.GetListAsync<FakeModel, TEntity, TType>(filterExpression);
+            var result = await repository.GetListAsync<FakeModel, TEntity, TKey>(filterExpression);
 
             // Assert
             if (entity != null && entity.Id != null)
             {
-                Assert.IsType(defaultValue.GetType(), entity.Id);
+                Assert.IsType(defaultKey.GetType(), entity.Id);
             }
 
             Assert.Equal(list, result);

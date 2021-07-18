@@ -1,6 +1,5 @@
 ﻿using System;
 using GodelTech.Data.Extensions;
-using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Neleus.LambdaCompare;
 using Xunit;
@@ -11,11 +10,11 @@ namespace GodelTech.Data.Tests.Extensions
     {
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void Delete_WhenRepositoryIsNull_ThrowsArgumentNullException<TType>(TType defaultValue)
+        public void Delete_WhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
-                () => RepositoryExtensions.Delete<FakeEntity<TType>, TType>(null, defaultValue)
+                () => RepositoryExtensions.Delete<IEntity<TKey>, TKey>(null, defaultKey)
             );
 
             Assert.Equal("repository", exception.ParamName);
@@ -23,22 +22,22 @@ namespace GodelTech.Data.Tests.Extensions
 
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void Delete_ById_WhenEntityIsNull<TEntity, TType>(
+        public void Delete_ById_WhenEntityIsNull<TEntity, TKey>(
+            TKey defaultKey,
             TEntity entity,
-            TType defaultValue,
             object id,
             bool expectedResult)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             // Arrange
-            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TType>((TType) id);
+            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>((TKey) id);
 
-            var mockRepository = new Mock<IRepository<TEntity, TType>>(MockBehavior.Strict);
+            var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
 
             mockRepository
                 .Setup(
                     x => x.Get(
-                        It.Is<QueryParameters<TEntity, TType>>(
+                        It.Is<QueryParameters<TEntity, TKey>>(
                             y => Lambda.Eq(
                                      y.Filter.Expression,
                                      filterExpression
@@ -56,12 +55,12 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            repository.Delete((TType) id);
+            repository.Delete((TKey) id);
 
             // Assert
             if (id != null)
             {
-                Assert.IsType(defaultValue.GetType(), id);
+                Assert.IsType(defaultKey.GetType(), id);
             }
 
             Assert.Equal(
@@ -72,7 +71,7 @@ namespace GodelTech.Data.Tests.Extensions
             mockRepository
                 .Verify(
                     x => x.Get(
-                        It.Is<QueryParameters<TEntity, TType>>(
+                        It.Is<QueryParameters<TEntity, TKey>>(
                             y => Lambda.Eq(
                                      y.Filter.Expression,
                                      filterExpression
@@ -93,22 +92,22 @@ namespace GodelTech.Data.Tests.Extensions
 
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void Delete_ById_WhenEntityIsNotNull<TEntity, TType>(
+        public void Delete_ById_WhenEntityIsNotNull<TEntity, TKey>(
+            TKey defaultKey,
             TEntity entity,
-            TType defaultValue,
             object id,
             bool expectedResult)
-            where TEntity : class, IEntity<TType>
+            where TEntity : class, IEntity<TKey>
         {
             // Arrange
-            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TType>((TType)id);
+            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>((TKey) id);
 
-            var mockRepository = new Mock<IRepository<TEntity, TType>>(MockBehavior.Strict);
+            var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
 
             mockRepository
                 .Setup(
                     x => x.Get(
-                        It.Is<QueryParameters<TEntity, TType>>(
+                        It.Is<QueryParameters<TEntity, TKey>>(
                             y => Lambda.Eq(
                                      y.Filter.Expression,
                                      filterExpression
@@ -126,12 +125,12 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            repository.Delete((TType)id);
+            repository.Delete((TKey) id);
 
             // Assert
             if (id != null)
             {
-                Assert.IsType(defaultValue.GetType(), id);
+                Assert.IsType(defaultKey.GetType(), id);
             }
 
             Assert.Equal(
@@ -142,7 +141,7 @@ namespace GodelTech.Data.Tests.Extensions
             mockRepository
                 .Verify(
                     x => x.Get(
-                        It.Is<QueryParameters<TEntity, TType>>(
+                        It.Is<QueryParameters<TEntity, TKey>>(
                             y => Lambda.Eq(
                                      y.Filter.Expression,
                                      filterExpression

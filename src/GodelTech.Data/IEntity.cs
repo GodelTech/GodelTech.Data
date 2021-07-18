@@ -5,16 +5,16 @@ namespace GodelTech.Data
     /// <summary>
     /// Interface of entity for data layer.
     /// </summary>
-    /// <typeparam name="TType">The type of the T type.</typeparam>
+    /// <typeparam name="TKey">The type of the T key.</typeparam>
     /// <seealso>
-    ///     <cref>System.IEquatable{GodelTech.Data.IEntity{TType}}</cref>
+    ///     <cref>GodelTech.Data.IEntity{TKey}</cref>
     /// </seealso>
-    public interface IEntity<TType> : IEqualityComparer<IEntity<TType>>
+    public interface IEntity<TKey> : IEqualityComparer<IEntity<TKey>>
     {
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
         /// <value>The identifier.</value>
-        TType Id { get; set; }
+        TKey Id { get; set; }
     }
 }
