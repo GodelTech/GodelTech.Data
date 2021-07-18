@@ -26,5 +26,4 @@ namespace GodelTech.Data.Tests.Fakes
             return obj.Id.GetHashCode();
         }
     }
-
 }
