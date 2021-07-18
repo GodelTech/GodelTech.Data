@@ -34,4 +34,21 @@
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<Compile Update="IRepository.*.cs">
+			<DependentUpon>IRepository.cs</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectCapability Include="DynamicDependentFile" />
+		<ProjectCapability Include="DynamicFileNesting" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="$(ProjectDir)\Extensions\RepositoryExtensions.*.cs">
+			<DependentUpon>$(ProjectDir)\Extensions\RepositoryExtensions.cs</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
 </Project>
