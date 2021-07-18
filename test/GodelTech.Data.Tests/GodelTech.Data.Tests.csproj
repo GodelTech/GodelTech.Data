@@ -55,13 +55,4 @@
 		</Compile>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Compile Update="Extensions\RepositoryExtensionsAsyncTests - Copy %282%29.Get.cs">
-	    <DependentUpon>$(ProjectDir)\Extensions\RepositoryExtensionsAsyncTests.cs</DependentUpon>
-	  </Compile>
-	  <Compile Update="Extensions\RepositoryExtensionsAsyncTests - Copy.Get.cs">
-	    <DependentUpon>$(ProjectDir)\Extensions\RepositoryExtensionsAsyncTests.cs</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
 </Project>
