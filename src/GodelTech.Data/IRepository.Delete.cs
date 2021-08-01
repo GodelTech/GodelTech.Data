@@ -11,9 +11,9 @@ namespace GodelTech.Data
         void Delete(TEntity entity);
 
         /// <summary>
-        /// Deletes range of entities by their ids.
+        /// Deletes range of entities.
         /// </summary>
-        /// <param name="ids">List of entities ids.</param>
-        void Delete(IEnumerable<TKey> ids);
+        /// <param name="entities">List of entities</param>
+        void Delete(IEnumerable<TEntity> entities);
     }
 }
