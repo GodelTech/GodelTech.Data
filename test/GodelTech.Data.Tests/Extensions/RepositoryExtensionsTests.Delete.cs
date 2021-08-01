@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using GodelTech.Data.Extensions;
+using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Neleus.LambdaCompare;
 using Xunit;
@@ -156,6 +158,110 @@ namespace GodelTech.Data.Tests.Extensions
             mockRepository
                 .Verify(
                     x => x.Delete(entity),
+                    Times.Once
+                );
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Delete_ByIdsWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
+        {
+            // Arrange & Act & Assert
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => RepositoryExtensions.Delete<IEntity<TKey>, TKey>(
+                    null,
+                    new List<TKey>
+                    {
+                        defaultKey
+                    }
+                )
+            );
+
+            Assert.Equal("repository", exception.ParamName);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Delete_ByIdsListIsEmpty<TKey>(TKey defaultKey)
+        {
+            // Arrange
+            var ids = new List<TKey>
+            {
+                defaultKey
+            };
+
+            var mockRepository = new Mock<IRepository<FakeEntity<TKey>, TKey>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.GetList(
+                        It.IsAny<QueryParameters<FakeEntity<TKey>, TKey>>()
+                    )
+                )
+                .Returns(new List<FakeEntity<TKey>>());
+
+            var repository = mockRepository.Object;
+
+            // Act
+            repository.Delete(ids);
+
+            // Assert
+            mockRepository
+                .Verify(
+                    x => x.GetList(
+                        It.IsAny<QueryParameters<FakeEntity<TKey>, TKey>>()
+                    ),
+                    Times.Once
+                );
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Delete_ByIds<TKey>(TKey defaultKey)
+        {
+            // Arrange
+            var ids = new List<TKey>
+            {
+                defaultKey
+            };
+
+            var entities = new List<FakeEntity<TKey>>
+            {
+                new FakeEntity<TKey>()
+            };
+
+            var mockRepository = new Mock<IRepository<FakeEntity<TKey>, TKey>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.GetList(
+                        It.IsAny<QueryParameters<FakeEntity<TKey>, TKey>>()
+                    )
+                )
+                .Returns(entities);
+
+            mockRepository
+                .Setup(
+                    x => x.Delete(entities)
+                );
+
+            var repository = mockRepository.Object;
+
+            // Act
+            repository.Delete(ids);
+
+            // Assert
+            mockRepository
+                .Verify(
+                    x => x.GetList(
+                        It.IsAny<QueryParameters<FakeEntity<TKey>, TKey>>()
+                    ),
+                    Times.Once
+                );
+
+            mockRepository
+                .Verify(
+                    x => x.Delete(entities),
                     Times.Once
                 );
         }
