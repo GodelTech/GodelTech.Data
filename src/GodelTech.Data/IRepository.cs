@@ -1,4 +1,4 @@
-namespace GodelTech.Data
+﻿namespace GodelTech.Data
 {
     /// <summary>
     /// Interface of repository for data layer.
