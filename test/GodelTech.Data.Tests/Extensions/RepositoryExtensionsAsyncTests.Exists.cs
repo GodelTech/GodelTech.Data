@@ -39,10 +39,10 @@ namespace GodelTech.Data.Tests.Extensions
                     x => x.ExistsAsync(
                         It.Is<QueryParameters<TEntity, TKey>>(
                             y =>
-                                filterExpression == null && y == null
-                                || y.Filter.Expression == filterExpression
+                                (filterExpression == null && y == null)
+                                || (y.Filter.Expression == filterExpression
                                 && y.Sort == null
-                                && y.Page == null
+                                && y.Page == null)
                         )
                     )
                 )

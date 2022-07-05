@@ -42,10 +42,10 @@ namespace GodelTech.Data.Tests.Extensions
                     x => x.GetListAsync(
                         It.Is<QueryParameters<TEntity, TKey>>(
                             y =>
-                                filterExpression == null && y == null
-                                || y.Filter.Expression == filterExpression
+                                (filterExpression == null && y == null)
+                                || (y.Filter.Expression == filterExpression
                                 && y.Sort == null
-                                && y.Page == null
+                                && y.Page == null)
                         )
                     )
                 )
@@ -96,10 +96,10 @@ namespace GodelTech.Data.Tests.Extensions
                     x => x.GetListAsync<FakeModel>(
                         It.Is<QueryParameters<TEntity, TKey>>(
                             y =>
-                                filterExpression == null && y == null
-                                || y.Filter.Expression == filterExpression
+                                (filterExpression == null && y == null)
+                                || (y.Filter.Expression == filterExpression
                                 && y.Sort == null
-                                && y.Page == null
+                                && y.Page == null)
                         )
                     )
                 )
