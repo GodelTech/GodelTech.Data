@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
 using GodelTech.Data.Extensions;
-using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Neleus.LambdaCompare;
 using Xunit;
@@ -39,10 +38,10 @@ namespace GodelTech.Data.Tests.Extensions
                     x => x.Exists(
                         It.Is<QueryParameters<TEntity, TKey>>(
                             y =>
-                                filterExpression == null && y == null
-                                || y.Filter.Expression == filterExpression
+                                (filterExpression == null && y == null)
+                                || (y.Filter.Expression == filterExpression
                                 && y.Sort == null
-                                && y.Page == null
+                                && y.Page == null)
                         )
                     )
                 )

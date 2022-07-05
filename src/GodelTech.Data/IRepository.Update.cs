@@ -1,4 +1,4 @@
-namespace GodelTech.Data
+﻿namespace GodelTech.Data
 {
     public partial interface IRepository<TEntity, TKey>
     {

@@ -1,0 +1,7 @@
+{
+  "stryker-config": {
+    "test-projects": [
+      "../../test/GodelTech.Data.Tests/GodelTech.Data.Tests.csproj"
+    ]
+  }
+}

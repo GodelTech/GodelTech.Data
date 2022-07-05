@@ -1,0 +1,7 @@
+[*.{cs,vb}]
+
+# CA2007: Do not directly await a Task
+dotnet_diagnostic.CA2007.severity = none
+
+# IDE0160: Convert to block-scoped namespace
+csharp_style_namespace_declarations = block_scoped

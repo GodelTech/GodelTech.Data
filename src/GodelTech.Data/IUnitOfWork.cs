@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 [assembly: CLSCompliant(true)]
@@ -7,7 +7,7 @@ namespace GodelTech.Data
     /// <summary>
     /// Interface of UnitOfWork for data layer.
     /// </summary>
-    /// <seealso cref="System.IDisposable" />
+    /// <seealso cref="IDisposable" />
     public interface IUnitOfWork : IDisposable
     {
         /// <summary>
