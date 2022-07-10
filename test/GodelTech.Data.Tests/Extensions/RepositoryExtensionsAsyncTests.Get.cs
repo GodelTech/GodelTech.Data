@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using GodelTech.Data.Extensions;
 using GodelTech.Data.Tests.Fakes;
@@ -41,6 +42,8 @@ namespace GodelTech.Data.Tests.Extensions
             where TEntity : class, IEntity<TKey>
         {
             // Arrange
+            var cancellationToken = new CancellationToken();
+
             var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
 
             mockRepository
@@ -50,7 +53,8 @@ namespace GodelTech.Data.Tests.Extensions
                             y => y.Filter.Expression == filterExpression
                                  && y.Sort == null
                                  && y.Page == null
-                        )
+                        ),
+                        cancellationToken
                     )
                 )
                 .ReturnsAsync(entity);
@@ -58,7 +62,7 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            var result = await repository.GetAsync(filterExpression);
+            var result = await repository.GetAsync(filterExpression, cancellationToken);
 
             // Assert
             if (entity != null && entity.Id != null)
@@ -79,6 +83,8 @@ namespace GodelTech.Data.Tests.Extensions
             where TEntity : class, IEntity<TKey>
         {
             // Arrange
+            var cancellationToken = new CancellationToken();
+
             var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>((TKey) id);
 
             var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
@@ -93,7 +99,8 @@ namespace GodelTech.Data.Tests.Extensions
                                  )
                                  && y.Sort == null
                                  && y.Page == null
-                        )
+                        ),
+                        cancellationToken
                     )
                 )
                 .ReturnsAsync(entity);
@@ -101,7 +108,7 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            var result = await repository.GetAsync((TKey) id);
+            var result = await repository.GetAsync((TKey) id, cancellationToken);
 
             // Assert
             if (id != null)
@@ -147,6 +154,8 @@ namespace GodelTech.Data.Tests.Extensions
             where TEntity : class, IEntity<TKey>
         {
             // Arrange
+            var cancellationToken = new CancellationToken();
+
             var model = new FakeModel();
 
             var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
@@ -158,7 +167,8 @@ namespace GodelTech.Data.Tests.Extensions
                             y => y.Filter.Expression == filterExpression
                                  && y.Sort == null
                                  && y.Page == null
-                        )
+                        ),
+                        cancellationToken
                     )
                 )
                 .ReturnsAsync(model);
@@ -166,7 +176,7 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            var result = await repository.GetAsync<FakeModel, TEntity, TKey>(filterExpression);
+            var result = await repository.GetAsync<FakeModel, TEntity, TKey>(filterExpression, cancellationToken);
 
             // Assert
             if (entity != null && entity.Id != null)
@@ -187,6 +197,8 @@ namespace GodelTech.Data.Tests.Extensions
             where TEntity : class, IEntity<TKey>
         {
             // Arrange
+            var cancellationToken = new CancellationToken();
+
             var model = new FakeModel();
 
             var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>((TKey) id);
@@ -203,7 +215,8 @@ namespace GodelTech.Data.Tests.Extensions
                                  )
                                  && y.Sort == null
                                  && y.Page == null
-                        )
+                        ),
+                        cancellationToken
                     )
                 )
                 .ReturnsAsync(model);
@@ -211,7 +224,7 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            var result = await repository.GetAsync<FakeModel, TEntity, TKey>((TKey) id);
+            var result = await repository.GetAsync<FakeModel, TEntity, TKey>((TKey) id, cancellationToken);
 
             // Assert
             if (id != null)

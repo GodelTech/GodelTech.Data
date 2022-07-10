@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GodelTech.Data.Extensions
@@ -49,15 +50,29 @@ namespace GodelTech.Data.Extensions
         /// <typeparam name="TKey">The type of the T key.</typeparam>
         /// <param name="repository">The repository.</param>
         /// <param name="filterExpression">The filter expression.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns><c>true</c> if exists, <c>false</c> otherwise.</returns>
         public static Task<bool> ExistsAsync<TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
-            Expression<Func<TEntity, bool>> filterExpression = null)
+            Expression<Func<TEntity, bool>> filterExpression = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class, IEntity<TKey>
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
 
-            return repository.ExistsInternalAsync(filterExpression);
+            return repository.ExistsInternalAsync(filterExpression, cancellationToken);
+        }
+
+        private static async Task<bool> ExistsInternalAsync<TEntity, TKey>(
+            this IRepository<TEntity, TKey> repository,
+            Expression<Func<TEntity, bool>> filterExpression = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class, IEntity<TKey>
+        {
+            return await repository.ExistsAsync(
+                filterExpression?.CreateQueryParameters<TEntity, TKey>(),
+                cancellationToken
+            );
         }
 
         /// <summary>
@@ -67,24 +82,17 @@ namespace GodelTech.Data.Extensions
         /// <typeparam name="TKey">The type of the T key.</typeparam>
         /// <param name="repository">The repository.</param>
         /// <param name="id">The identifier.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns><c>true</c> if exists, <c>false</c> otherwise.</returns>
         public static async Task<bool> ExistsAsync<TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
-            TKey id)
+            TKey id,
+            CancellationToken cancellationToken = default)
             where TEntity : class, IEntity<TKey>
         {
             return await repository.ExistsAsync(
-                FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>(id)
-            );
-        }
-
-        private static async Task<bool> ExistsInternalAsync<TEntity, TKey>(
-            this IRepository<TEntity, TKey> repository,
-            Expression<Func<TEntity, bool>> filterExpression = null)
-            where TEntity : class, IEntity<TKey>
-        {
-            return await repository.ExistsAsync(
-                filterExpression?.CreateQueryParameters<TEntity, TKey>()
+                FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>(id),
+                cancellationToken
             );
         }
     }

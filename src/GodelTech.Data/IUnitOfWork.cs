@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 [assembly: CLSCompliant(true)]
@@ -22,6 +23,6 @@ namespace GodelTech.Data
         /// </summary>
         /// <returns>Number of rows affected.</returns>
         /// <exception cref="DataStorageException"></exception>
-        Task<int> CommitAsync();
+        Task<int> CommitAsync(CancellationToken cancellationToken = default);
     }
 }

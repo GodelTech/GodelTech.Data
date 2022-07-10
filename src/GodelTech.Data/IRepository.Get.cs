@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace GodelTech.Data
 {
@@ -30,8 +31,9 @@ namespace GodelTech.Data
         /// If no entity is found, then null is returned.
         /// </summary>
         /// <param name="queryParameters">Query parameters.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns><cref>Task{TEntity}</cref>.</returns>
-        Task<TEntity> GetAsync(QueryParameters<TEntity, TKey> queryParameters = null);
+        Task<TEntity> GetAsync(QueryParameters<TEntity, TKey> queryParameters = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously gets model of type T from repository that satisfies a query parameters.
@@ -39,7 +41,8 @@ namespace GodelTech.Data
         /// </summary>
         /// <typeparam name="TModel">The type of the T model.</typeparam>
         /// <param name="queryParameters">Query parameters.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns><cref>Task{TModel}</cref>.</returns>
-        Task<TModel> GetAsync<TModel>(QueryParameters<TEntity, TKey> queryParameters = null);
+        Task<TModel> GetAsync<TModel>(QueryParameters<TEntity, TKey> queryParameters = null, CancellationToken cancellationToken = default);
     }
 }
