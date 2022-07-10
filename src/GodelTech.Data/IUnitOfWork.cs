@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
 [assembly: CLSCompliant(true)]
+[assembly: InternalsVisibleTo("GodelTech.Data.Tests")]
 namespace GodelTech.Data
 {
     /// <summary>

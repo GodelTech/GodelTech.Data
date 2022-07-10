@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using GodelTech.Data.Specification;
 
 namespace GodelTech.Data
 {
@@ -11,6 +12,23 @@ namespace GodelTech.Data
     public class FilterRule<TEntity, TKey>
         where TEntity : class, IEntity<TKey>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FilterRule{TEntity, TKey}"/> class.
+        /// </summary>
+        public FilterRule()
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FilterRule{TEntity, TKey}"/> class.
+        /// </summary>
+        /// <param name="specification"></param>
+        public FilterRule(ISpecification<TEntity, TKey> specification)
+        {
+            Expression = entity => specification.IsSatisfiedBy(entity);
+        }
+
         /// <summary>
         /// Gets or sets filter expression.
         /// </summary>
