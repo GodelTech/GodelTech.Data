@@ -69,6 +69,18 @@ namespace GodelTech.Data.Extensions
             return repository.GetListInternalAsync(filterExpression, cancellationToken);
         }
 
+        private static async Task<IList<TEntity>> GetListInternalAsync<TEntity, TKey>(
+            this IRepository<TEntity, TKey> repository,
+            Expression<Func<TEntity, bool>> filterExpression = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class, IEntity<TKey>
+        {
+            return await repository.GetListAsync(
+                filterExpression?.CreateQueryParameters<TEntity, TKey>(),
+                cancellationToken
+            );
+        }
+
         /// <summary>
         /// Asynchronously gets models of type T from repository that satisfies an expression.
         /// </summary>
@@ -88,18 +100,6 @@ namespace GodelTech.Data.Extensions
             if (repository == null) throw new ArgumentNullException(nameof(repository));
 
             return repository.GetListInternalAsync<TModel, TEntity, TKey>(filterExpression, cancellationToken);
-        }
-
-        private static async Task<IList<TEntity>> GetListInternalAsync<TEntity, TKey>(
-            this IRepository<TEntity, TKey> repository,
-            Expression<Func<TEntity, bool>> filterExpression = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class, IEntity<TKey>
-        {
-            return await repository.GetListAsync(
-                filterExpression?.CreateQueryParameters<TEntity, TKey>(),
-                cancellationToken
-            );
         }
 
         private static async Task<IList<TModel>> GetListInternalAsync<TModel, TEntity, TKey>(
