@@ -24,7 +24,7 @@ namespace GodelTech.Data.Tests.Extensions
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
         [MemberData(nameof(FilterExpressionExtensionsTests.NullFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void GetList_ByFilterExpression_ReturnsEntity<TEntity, TKey>(
+        public void GetList_ByFilterExpression_ReturnsEntities<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,
             Expression<Func<TEntity, bool>> filterExpression)
@@ -78,7 +78,7 @@ namespace GodelTech.Data.Tests.Extensions
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
         [MemberData(nameof(FilterExpressionExtensionsTests.NullFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void GetListModel_ByFilterExpression_ReturnsEntity<TEntity, TKey>(
+        public void GetListModel_ByFilterExpression_ReturnsEntities<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,
             Expression<Func<TEntity, bool>> filterExpression)

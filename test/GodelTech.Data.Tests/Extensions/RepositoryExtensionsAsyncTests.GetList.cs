@@ -26,7 +26,7 @@ namespace GodelTech.Data.Tests.Extensions
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
         [MemberData(nameof(FilterExpressionExtensionsTests.NullFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task GetListAsync_ByFilterExpression_ReturnsEntity<TEntity, TKey>(
+        public async Task GetListAsync_ByFilterExpression_ReturnsEntities<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,
             Expression<Func<TEntity, bool>> filterExpression)
@@ -83,7 +83,7 @@ namespace GodelTech.Data.Tests.Extensions
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
         [MemberData(nameof(FilterExpressionExtensionsTests.NullFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task GetListModelAsync_ByFilterExpression_ReturnsEntity<TEntity, TKey>(
+        public async Task GetListModelAsync_ByFilterExpression_ReturnsEntities<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,
             Expression<Func<TEntity, bool>> filterExpression)

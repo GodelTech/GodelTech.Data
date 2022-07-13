@@ -12,11 +12,11 @@ namespace GodelTech.Data.Tests.Extensions
     {
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task ExistsAsync_WhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultValue)
+        public async Task ExistsAsync_WhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => RepositoryExtensions.ExistsAsync<IEntity<TKey>, TKey>(null, x => x.Id.Equals(defaultValue))
+                () => RepositoryExtensions.ExistsAsync<IEntity<TKey>, TKey>(null, x => x.Id.Equals(defaultKey))
             );
 
             Assert.Equal("repository", exception.ParamName);
@@ -25,7 +25,7 @@ namespace GodelTech.Data.Tests.Extensions
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
         [MemberData(nameof(FilterExpressionExtensionsTests.NullFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task ExistsAsync_ByFilterExpression_ReturnsEntity<TEntity, TKey>(
+        public async Task ExistsAsync_ByFilterExpression_ReturnsResult<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,
             Expression<Func<TEntity, bool>> filterExpression)
@@ -67,7 +67,7 @@ namespace GodelTech.Data.Tests.Extensions
 
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task ExistsAsync_ById_ReturnsEntity<TEntity, TKey>(
+        public async Task ExistsAsync_ById_ReturnsResult<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,
             object id,
