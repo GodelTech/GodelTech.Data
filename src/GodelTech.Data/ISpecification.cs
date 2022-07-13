@@ -1,4 +1,4 @@
-﻿namespace GodelTech.Data.Specification
+﻿namespace GodelTech.Data
 {
     /// <summary>
     /// Interface of specification.

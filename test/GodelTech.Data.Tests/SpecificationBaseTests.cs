@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using GodelTech.Data.Tests.Fakes;
 using Xunit;
 
-namespace GodelTech.Data.Tests.Specification
+namespace GodelTech.Data.Tests
 {
     public class SpecificationBaseTests
     {

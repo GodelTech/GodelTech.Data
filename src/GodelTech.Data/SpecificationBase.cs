@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
+using GodelTech.Data.Specification;
 
-namespace GodelTech.Data.Specification
+namespace GodelTech.Data
 {
     /// <summary>
     /// LINQ Specification.
