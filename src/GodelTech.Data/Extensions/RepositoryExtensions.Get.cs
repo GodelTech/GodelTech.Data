@@ -105,18 +105,6 @@ namespace GodelTech.Data.Extensions
             return repository.GetInternalAsync(filterExpression, cancellationToken);
         }
 
-        private static async Task<TEntity> GetInternalAsync<TEntity, TKey>(
-            this IRepository<TEntity, TKey> repository,
-            Expression<Func<TEntity, bool>> filterExpression,
-            CancellationToken cancellationToken = default)
-            where TEntity : class, IEntity<TKey>
-        {
-            return await repository.GetAsync(
-                filterExpression.CreateQueryParameters<TEntity, TKey>(),
-                cancellationToken
-            );
-        }
-
         /// <summary>
         /// Asynchronously gets entity of type T from repository by identifier.
         /// If no entity is found, then null is returned.
@@ -161,18 +149,6 @@ namespace GodelTech.Data.Extensions
             return repository.GetInternalAsync<TModel, TEntity, TKey>(filterExpression, cancellationToken);
         }
 
-        private static async Task<TModel> GetInternalAsync<TModel, TEntity, TKey>(
-            this IRepository<TEntity, TKey> repository,
-            Expression<Func<TEntity, bool>> filterExpression,
-            CancellationToken cancellationToken = default)
-            where TEntity : class, IEntity<TKey>
-        {
-            return await repository.GetAsync<TModel>(
-                filterExpression.CreateQueryParameters<TEntity, TKey>(),
-                cancellationToken
-            );
-        }
-
         /// <summary>
         /// Asynchronously gets model of type T from repository by identifier.
         /// If no entity is found, then null is returned.
@@ -192,6 +168,30 @@ namespace GodelTech.Data.Extensions
         {
             return await repository.GetAsync<TModel, TEntity, TKey>(
                 FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>(id),
+                cancellationToken
+            );
+        }
+
+        private static async Task<TEntity> GetInternalAsync<TEntity, TKey>(
+            this IRepository<TEntity, TKey> repository,
+            Expression<Func<TEntity, bool>> filterExpression,
+            CancellationToken cancellationToken = default)
+            where TEntity : class, IEntity<TKey>
+        {
+            return await repository.GetAsync(
+                filterExpression.CreateQueryParameters<TEntity, TKey>(),
+                cancellationToken
+            );
+        }
+
+        private static async Task<TModel> GetInternalAsync<TModel, TEntity, TKey>(
+            this IRepository<TEntity, TKey> repository,
+            Expression<Func<TEntity, bool>> filterExpression,
+            CancellationToken cancellationToken = default)
+            where TEntity : class, IEntity<TKey>
+        {
+            return await repository.GetAsync<TModel>(
+                filterExpression.CreateQueryParameters<TEntity, TKey>(),
                 cancellationToken
             );
         }

@@ -63,18 +63,6 @@ namespace GodelTech.Data.Extensions
             return repository.ExistsInternalAsync(filterExpression, cancellationToken);
         }
 
-        private static async Task<bool> ExistsInternalAsync<TEntity, TKey>(
-            this IRepository<TEntity, TKey> repository,
-            Expression<Func<TEntity, bool>> filterExpression = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class, IEntity<TKey>
-        {
-            return await repository.ExistsAsync(
-                filterExpression?.CreateQueryParameters<TEntity, TKey>(),
-                cancellationToken
-            );
-        }
-
         /// <summary>
         /// Asynchronously checks if entity of type T with identifier exists in repository.
         /// </summary>
@@ -92,6 +80,18 @@ namespace GodelTech.Data.Extensions
         {
             return await repository.ExistsAsync(
                 FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>(id),
+                cancellationToken
+            );
+        }
+
+        private static async Task<bool> ExistsInternalAsync<TEntity, TKey>(
+            this IRepository<TEntity, TKey> repository,
+            Expression<Func<TEntity, bool>> filterExpression = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class, IEntity<TKey>
+        {
+            return await repository.ExistsAsync(
+                filterExpression?.CreateQueryParameters<TEntity, TKey>(),
                 cancellationToken
             );
         }
