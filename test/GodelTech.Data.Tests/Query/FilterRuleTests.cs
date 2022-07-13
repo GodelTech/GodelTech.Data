@@ -1,5 +1,4 @@
-﻿using GodelTech.Data.Specification;
-using GodelTech.Data.Tests.Fakes;
+﻿using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Neleus.LambdaCompare;
 using Xunit;
