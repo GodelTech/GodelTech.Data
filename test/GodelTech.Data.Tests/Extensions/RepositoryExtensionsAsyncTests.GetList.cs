@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using GodelTech.Data.Extensions;
 using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Xunit;

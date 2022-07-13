@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace GodelTech.Data.Extensions
+namespace GodelTech.Data
 {
     /// <summary>
     /// Extensions of filter expression.

@@ -1,4 +1,4 @@
-﻿namespace GodelTech.Data.Extensions
+﻿namespace GodelTech.Data
 {
     /// <summary>
     /// Extensions of repository for data layer.

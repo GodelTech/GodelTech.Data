@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GodelTech.Data.Extensions
+namespace GodelTech.Data
 {
     public static partial class RepositoryExtensions
     {

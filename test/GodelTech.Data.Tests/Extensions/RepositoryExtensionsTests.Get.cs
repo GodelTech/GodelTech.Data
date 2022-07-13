@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using GodelTech.Data.Extensions;
 using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Neleus.LambdaCompare;

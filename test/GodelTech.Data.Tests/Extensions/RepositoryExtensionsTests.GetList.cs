@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using GodelTech.Data.Extensions;
 using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Xunit;
