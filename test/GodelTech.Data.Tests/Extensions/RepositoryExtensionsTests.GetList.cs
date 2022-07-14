@@ -11,7 +11,7 @@ namespace GodelTech.Data.Tests.Extensions
     {
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void GetList_WhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
+        public void GetList_ByFilterExpressionWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
@@ -65,7 +65,7 @@ namespace GodelTech.Data.Tests.Extensions
 
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void GetListModel_WhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
+        public void GetListModel_ByFilterExpressionWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(

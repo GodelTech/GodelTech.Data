@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Neleus.LambdaCompare;
 using Xunit;
@@ -9,8 +10,56 @@ namespace GodelTech.Data.Tests.Extensions
     public partial class RepositoryExtensionsTests
     {
         [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Exists_ById_ReturnsResult<TEntity, TKey>(
+            TKey defaultKey,
+            TEntity entity,
+            object id,
+            bool expectedResult)
+            where TEntity : class, IEntity<TKey>
+        {
+            // Arrange
+            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>((TKey) id);
+
+            var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.Exists(
+                        It.Is<QueryParameters<TEntity, TKey>>(
+                            y => Lambda.Eq(
+                                     y.Filter.Expression,
+                                     filterExpression
+                                 )
+                                 && y.Sort == null
+                                 && y.Page == null
+                        )
+                    )
+                )
+                .Returns(true);
+
+            var repository = mockRepository.Object;
+
+            // Act
+            var result = repository.Exists((TKey) id);
+
+            // Assert
+            if (id != null)
+            {
+                Assert.IsType(defaultKey.GetType(), id);
+            }
+
+            Assert.Equal(
+                expectedResult,
+                filterExpression.Compile().Invoke(entity)
+            );
+
+            Assert.True(result);
+        }
+
+        [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void Exists_WhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
+        public void Exists_ByFilterExpressionWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
@@ -61,29 +110,44 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void Exists_ById_ReturnsResult<TEntity, TKey>(
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Exists_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
+        {
+            // Arrange & Act & Assert
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => RepositoryExtensions.Exists(
+                    null,
+                    new FakeSpecification<IEntity<TKey>, TKey>(
+                        x => x.Id.Equals(defaultKey)
+                    )
+                )
+            );
+
+            Assert.Equal("repository", exception.ParamName);
+        }
+
+        [Theory]
+        [MemberData(nameof(SpecificationBaseTests.IsSatisfiedByMemberData), MemberType = typeof(SpecificationBaseTests))]
+        public void Exists_BySpecification_ReturnsResult<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,
-            object id,
+            Expression<Func<TEntity, bool>> expression,
             bool expectedResult)
             where TEntity : class, IEntity<TKey>
         {
             // Arrange
-            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>((TKey) id);
-
             var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
+
+            var specification = new FakeSpecification<TEntity, TKey>(expression);
 
             mockRepository
                 .Setup(
                     x => x.Exists(
                         It.Is<QueryParameters<TEntity, TKey>>(
-                            y => Lambda.Eq(
-                                     y.Filter.Expression,
-                                     filterExpression
-                                 )
-                                 && y.Sort == null
-                                 && y.Page == null
+                            y =>
+                                y.Filter.Expression.Compile().Invoke(entity) == expectedResult
+                                && y.Sort == null
+                                && y.Page == null
                         )
                     )
                 )
@@ -92,18 +156,13 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            var result = repository.Exists((TKey) id);
+            var result = repository.Exists(specification);
 
             // Assert
-            if (id != null)
+            if (entity != null && entity.Id != null)
             {
-                Assert.IsType(defaultKey.GetType(), id);
+                Assert.IsType(defaultKey.GetType(), entity.Id);
             }
-
-            Assert.Equal(
-                expectedResult,
-                filterExpression.Compile().Invoke(entity)
-            );
 
             Assert.True(result);
         }
