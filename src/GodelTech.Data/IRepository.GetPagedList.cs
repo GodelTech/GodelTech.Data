@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace GodelTech.Data
 {
@@ -23,15 +24,17 @@ namespace GodelTech.Data
         /// Asynchronously gets paged list of entities of type T from repository that satisfies a query parameters.
         /// </summary>
         /// <param name="queryParameters">Query parameters.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns><cref>Task{PagedResult{TEntity}}</cref>.</returns>
-        Task<PagedResult<TEntity>> GetPagedListAsync(QueryParameters<TEntity, TKey> queryParameters);
+        Task<PagedResult<TEntity>> GetPagedListAsync(QueryParameters<TEntity, TKey> queryParameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously gets paged list of models of type T from repository that satisfies a query parameters.
         /// </summary>
         /// <typeparam name="TModel">The type of the T model.</typeparam>
         /// <param name="queryParameters">Query parameters.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns><cref>Task{PagedResult{TModel}}</cref>.</returns>
-        Task<PagedResult<TModel>> GetPagedListAsync<TModel>(QueryParameters<TEntity, TKey> queryParameters);
+        Task<PagedResult<TModel>> GetPagedListAsync<TModel>(QueryParameters<TEntity, TKey> queryParameters, CancellationToken cancellationToken = default);
     }
 }

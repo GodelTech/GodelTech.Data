@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 [assembly: CLSCompliant(true)]
+[assembly: InternalsVisibleTo("GodelTech.Data.Tests")]
 namespace GodelTech.Data
 {
     /// <summary>
@@ -22,6 +25,6 @@ namespace GodelTech.Data
         /// </summary>
         /// <returns>Number of rows affected.</returns>
         /// <exception cref="DataStorageException"></exception>
-        Task<int> CommitAsync();
+        Task<int> CommitAsync(CancellationToken cancellationToken = default);
     }
 }

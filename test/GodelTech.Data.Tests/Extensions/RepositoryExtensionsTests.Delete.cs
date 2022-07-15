@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using GodelTech.Data.Extensions;
 using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Neleus.LambdaCompare;
@@ -12,7 +11,7 @@ namespace GodelTech.Data.Tests.Extensions
     {
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void Delete_WhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
+        public void Delete_ByIdWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(

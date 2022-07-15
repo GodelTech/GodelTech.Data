@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GodelTech.Data.Extensions
+namespace GodelTech.Data
 {
     public static partial class RepositoryExtensions
     {

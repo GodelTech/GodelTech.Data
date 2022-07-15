@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
-using GodelTech.Data.Extensions;
 using GodelTech.Data.Tests.Fakes;
 using Xunit;
 
@@ -187,14 +186,14 @@ namespace GodelTech.Data.Tests.Extensions
 
         [Theory]
         [MemberData(nameof(TypesMemberData))]
-        public void CreateQueryParameters_WhenFilterExpressionIsNull_ThrowsArgumentNullException<TKey>(TKey defaultValue)
+        public void CreateQueryParameters_WhenFilterExpressionIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
                 () => FilterExpressionExtensions.CreateQueryParameters<IEntity<TKey>, TKey>(null)
             );
 
-            Assert.NotNull(defaultValue);
+            Assert.NotNull(defaultKey);
             Assert.Equal("filterExpression", exception.ParamName);
         }
 

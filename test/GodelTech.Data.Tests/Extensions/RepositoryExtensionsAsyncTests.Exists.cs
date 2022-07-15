@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
-using GodelTech.Data.Extensions;
+using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Neleus.LambdaCompare;
 using Xunit;
@@ -11,60 +12,8 @@ namespace GodelTech.Data.Tests.Extensions
     public partial class RepositoryExtensionsAsyncTests
     {
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task ExistsAsync_WhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultValue)
-        {
-            // Arrange & Act & Assert
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => RepositoryExtensions.ExistsAsync<IEntity<TKey>, TKey>(null, x => x.Id.Equals(defaultValue))
-            );
-
-            Assert.Equal("repository", exception.ParamName);
-        }
-
-        [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        [MemberData(nameof(FilterExpressionExtensionsTests.NullFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task ExistsAsync_ByFilterExpression_ReturnsEntity<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TKey>
-        {
-            // Arrange
-            var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
-
-            mockRepository
-                .Setup(
-                    x => x.ExistsAsync(
-                        It.Is<QueryParameters<TEntity, TKey>>(
-                            y =>
-                                (filterExpression == null && y == null)
-                                || (y.Filter.Expression == filterExpression
-                                && y.Sort == null
-                                && y.Page == null)
-                        )
-                    )
-                )
-                .ReturnsAsync(true);
-
-            var repository = mockRepository.Object;
-
-            // Act
-            var result = await repository.ExistsAsync(filterExpression);
-
-            // Assert
-            if (entity != null && entity.Id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), entity.Id);
-            }
-
-            Assert.True(result);
-        }
-
-        [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task ExistsAsync_ById_ReturnsEntity<TEntity, TKey>(
+        public async Task ExistsAsync_ById_ReturnsResult<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,
             object id,
@@ -72,6 +21,8 @@ namespace GodelTech.Data.Tests.Extensions
             where TEntity : class, IEntity<TKey>
         {
             // Arrange
+            var cancellationToken = new CancellationToken();
+
             var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>((TKey) id);
 
             var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
@@ -86,7 +37,8 @@ namespace GodelTech.Data.Tests.Extensions
                                  )
                                  && y.Sort == null
                                  && y.Page == null
-                        )
+                        ),
+                        cancellationToken
                     )
                 )
                 .ReturnsAsync(true);
@@ -94,7 +46,7 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            var result = await repository.ExistsAsync((TKey) id);
+            var result = await repository.ExistsAsync((TKey) id, cancellationToken);
 
             // Assert
             if (id != null)
@@ -106,6 +58,122 @@ namespace GodelTech.Data.Tests.Extensions
                 expectedResult,
                 filterExpression.Compile().Invoke(entity)
             );
+
+            Assert.True(result);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task ExistsAsync_ByFilterExpressionWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
+        {
+            // Arrange & Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => RepositoryExtensions.ExistsAsync<IEntity<TKey>, TKey>(null, x => x.Id.Equals(defaultKey))
+            );
+
+            Assert.Equal("repository", exception.ParamName);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.NullFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task ExistsAsync_ByFilterExpression_ReturnsResult<TEntity, TKey>(
+            TKey defaultKey,
+            TEntity entity,
+            Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class, IEntity<TKey>
+        {
+            // Arrange
+            var cancellationToken = new CancellationToken();
+
+            var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.ExistsAsync(
+                        It.Is<QueryParameters<TEntity, TKey>>(
+                            y =>
+                                (filterExpression == null && y == null)
+                                || (y.Filter.Expression == filterExpression
+                                && y.Sort == null
+                                && y.Page == null)
+                        ),
+                        cancellationToken
+                    )
+                )
+                .ReturnsAsync(true);
+
+            var repository = mockRepository.Object;
+
+            // Act
+            var result = await repository.ExistsAsync(filterExpression, cancellationToken);
+
+            // Assert
+            if (entity != null && entity.Id != null)
+            {
+                Assert.IsType(defaultKey.GetType(), entity.Id);
+            }
+
+            Assert.True(result);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task ExistsAsync_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
+        {
+            // Arrange & Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => RepositoryExtensions.ExistsAsync(
+                    null,
+                    new FakeSpecification<IEntity<TKey>, TKey>(
+                        x => x.Id.Equals(defaultKey)
+                    )
+                )
+            );
+
+            Assert.Equal("repository", exception.ParamName);
+        }
+
+        [Theory]
+        [MemberData(nameof(SpecificationBaseTests.IsSatisfiedByMemberData), MemberType = typeof(SpecificationBaseTests))]
+        public async Task ExistsAsync_BySpecification_ReturnsResult<TEntity, TKey>(
+            TKey defaultKey,
+            TEntity entity,
+            Expression<Func<TEntity, bool>> expression,
+            bool expectedResult)
+            where TEntity : class, IEntity<TKey>
+        {
+            // Arrange
+            var cancellationToken = new CancellationToken();
+
+            var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
+
+            var specification = new FakeSpecification<TEntity, TKey>(expression);
+
+            mockRepository
+                .Setup(
+                    x => x.ExistsAsync(
+                        It.Is<QueryParameters<TEntity, TKey>>(
+                            y =>
+                                y.Filter.Expression.Compile().Invoke(entity) == expectedResult
+                                && y.Sort == null
+                                && y.Page == null
+                        ),
+                        cancellationToken
+                    )
+                )
+                .ReturnsAsync(true);
+
+            var repository = mockRepository.Object;
+
+            // Act
+            var result = await repository.ExistsAsync(specification, cancellationToken);
+
+            // Assert
+            if (entity != null && entity.Id != null)
+            {
+                Assert.IsType(defaultKey.GetType(), entity.Id);
+            }
 
             Assert.True(result);
         }
