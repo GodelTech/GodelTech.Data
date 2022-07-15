@@ -69,18 +69,14 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task GetListAsync_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetListAsync_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
                 () => RepositoryExtensions.GetListAsync(
                     null,
-                    new FakeSpecification<TEntity, TKey>(filterExpression)
+                    new FakeSpecification<IEntity<TKey>, TKey>(x => x.Id.Equals(defaultKey))
                 )
             );
 
@@ -191,18 +187,14 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task GetListModelAsync_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetListModelAsync_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => RepositoryExtensions.GetListAsync<FakeModel, TEntity, TKey>(
+                () => RepositoryExtensions.GetListAsync<FakeModel, IEntity<TKey>, TKey>(
                     null,
-                    new FakeSpecification<TEntity, TKey>(filterExpression)
+                    new FakeSpecification<IEntity<TKey>, TKey>(x => x.Id.Equals(defaultKey))
                 )
             );
 

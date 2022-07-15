@@ -63,22 +63,16 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task GetAsync_ByFilterExpressionWhenRepositoryIsNull_ThrowsArgumentNullException<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetAsync_ByFilterExpressionWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => RepositoryExtensions.GetAsync<TEntity, TKey>(null, filterExpression)
+                () => RepositoryExtensions.GetAsync<IEntity<TKey>, TKey>(
+                    null,
+                    x => x.Id.Equals(defaultKey)
+                )
             );
-
-            if (entity != null && entity.Id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), entity.Id);
-            }
 
             Assert.Equal("repository", exception.ParamName);
         }
@@ -124,25 +118,16 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task GetAsync_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetAsync_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
                 () => RepositoryExtensions.GetAsync(
                     null,
-                    new FakeSpecification<TEntity, TKey>(filterExpression)
+                    new FakeSpecification<IEntity<TKey>, TKey>(x => x.Id.Equals(defaultKey))
                 )
             );
-
-            if (entity != null && entity.Id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), entity.Id);
-            }
 
             Assert.Equal("repository", exception.ParamName);
         }
@@ -246,21 +231,15 @@ namespace GodelTech.Data.Tests.Extensions
 
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task GetModelAsync_ByFilterExpressionWhenRepositoryIsNull_ThrowsArgumentNullException<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TKey>
+        public async Task GetModelAsync_ByFilterExpressionWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => RepositoryExtensions.GetAsync<FakeModel, TEntity, TKey>(null, filterExpression)
+                () => RepositoryExtensions.GetAsync<FakeModel, IEntity<TKey>, TKey>(
+                    null,
+                    x => x.Id.Equals(defaultKey)
+                )
             );
-
-            if (entity != null && entity.Id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), entity.Id);
-            }
 
             Assert.Equal("repository", exception.ParamName);
         }
@@ -308,25 +287,16 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task GetModelAsync_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetModelAsync_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => RepositoryExtensions.GetAsync<FakeModel, TEntity, TKey>(
+                () => RepositoryExtensions.GetAsync<FakeModel, IEntity<TKey>, TKey>(
                     null,
-                    new FakeSpecification<TEntity, TKey>(filterExpression)
+                    new FakeSpecification<IEntity<TKey>, TKey>(x => x.Id.Equals(defaultKey))
                 )
             );
-
-            if (entity != null && entity.Id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), entity.Id);
-            }
 
             Assert.Equal("repository", exception.ParamName);
         }
