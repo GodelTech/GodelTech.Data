@@ -230,7 +230,7 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
         public async Task GetModelAsync_ByFilterExpressionWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
         {
             // Arrange & Act & Assert
