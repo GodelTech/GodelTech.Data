@@ -1,4 +1,7 @@
-﻿using GodelTech.Data.Specification;
+﻿using System;
+using System.Linq.Expressions;
+
+using GodelTech.Data.Specification;
 
 namespace GodelTech.Data.Tests.Fakes
 {
@@ -12,9 +15,6 @@ namespace GodelTech.Data.Tests.Fakes
             _isSatisfiedBy = isSatisfiedBy;
         }
 
-        public override bool IsSatisfiedBy(TEntity candidate)
-        {
-            return _isSatisfiedBy;
-        }
+        public override Expression<Func<TEntity, bool>> AsExpression() => (x) => _isSatisfiedBy;
     }
 }

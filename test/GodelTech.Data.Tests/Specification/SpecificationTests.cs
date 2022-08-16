@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+
 using GodelTech.Data.Specification;
 using GodelTech.Data.Tests.Fakes;
+
 using Moq;
+
 using Xunit;
 
 namespace GodelTech.Data.Tests.Specification
@@ -117,10 +120,18 @@ namespace GodelTech.Data.Tests.Specification
             // Arrange
             var leftSpecification = new Mock<ISpecification<TEntity, TKey>>(MockBehavior.Strict);
             leftSpecification
+                .Setup(x => x.AsExpression())
+                .Returns(x => leftResult);
+
+            leftSpecification
                 .Setup(x => x.IsSatisfiedBy(entity))
                 .Returns(leftResult);
 
             var rightSpecification = new Mock<ISpecification<TEntity, TKey>>(MockBehavior.Strict);
+            rightSpecification
+                .Setup(x => x.AsExpression())
+                .Returns(x => rightResult);
+
             rightSpecification
                 .Setup(x => x.IsSatisfiedBy(entity))
                 .Returns(rightResult);

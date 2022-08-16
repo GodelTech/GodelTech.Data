@@ -25,7 +25,9 @@ namespace GodelTech.Data
         /// <param name="specification"></param>
         public FilterRule(ISpecification<TEntity, TKey> specification)
         {
-            Expression = entity => specification.IsSatisfiedBy(entity);
+            if (specification == null) throw new ArgumentNullException(nameof(specification));
+
+            Expression = specification.AsExpression();
         }
 
         /// <summary>

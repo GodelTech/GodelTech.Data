@@ -1,4 +1,7 @@
-﻿namespace GodelTech.Data.Specification
+﻿using System.Linq.Expressions;
+using System;
+
+namespace GodelTech.Data.Specification
 {
     /// <summary>
     /// Composite Specification.
@@ -9,7 +12,7 @@
         where TEntity : class, IEntity<TKey>
     {
         /// <inheritdoc />
-        public abstract bool IsSatisfiedBy(TEntity candidate);
+        public bool IsSatisfiedBy(TEntity candidate) => AsExpression().Compile().Invoke(candidate);
 
         /// <inheritdoc />
         public ISpecification<TEntity, TKey> And(ISpecification<TEntity, TKey> other) => new AndSpecification<TEntity, TKey>(this, other);
@@ -25,5 +28,8 @@
 
         /// <inheritdoc />
         public ISpecification<TEntity, TKey> Not() => new NotSpecification<TEntity, TKey>(this);
+
+        /// <inheritdoc />
+        public abstract Expression<Func<TEntity, bool>> AsExpression();
     }
 }

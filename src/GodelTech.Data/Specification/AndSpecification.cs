@@ -1,4 +1,7 @@
-﻿namespace GodelTech.Data.Specification
+﻿using System.Linq.Expressions;
+using System;
+
+namespace GodelTech.Data.Specification
 {
     internal class AndSpecification<TEntity, TKey> : CompositeSpecification<TEntity, TKey>
         where TEntity : class, IEntity<TKey>
@@ -12,6 +15,10 @@
             _right = right;
         }
 
-        public override bool IsSatisfiedBy(TEntity candidate) => _left.IsSatisfiedBy(candidate) && _right.IsSatisfiedBy(candidate);
+        public override Expression<Func<TEntity, bool>> AsExpression() => Expression.Lambda<Func<TEntity, bool>>(
+            Expression.And(
+                _left.AsExpression().Body,
+                _right.AsExpression().Body),
+            Expression.Parameter(typeof(TEntity)));
     }
 }
