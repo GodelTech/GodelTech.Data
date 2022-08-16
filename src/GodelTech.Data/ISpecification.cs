@@ -1,4 +1,7 @@
-﻿namespace GodelTech.Data
+﻿using System;
+using System.Linq.Expressions;
+
+namespace GodelTech.Data
 {
     /// <summary>
     /// Interface of specification.
@@ -57,5 +60,11 @@
         // You can suppress a warning from this rule if you're sure that the identifier won't confuse users of the API, and that the library is usable in all available languages in .NET.
         ISpecification<TEntity, TKey> Not();
 #pragma warning restore CA1716 // Identifiers should not match keywords
+
+        /// <summary>
+        /// Returns specification Expression.
+        /// </summary>
+        /// <returns>Expression.</returns>
+        Expression<Func<TEntity, bool>> AsExpression();
     }
 }

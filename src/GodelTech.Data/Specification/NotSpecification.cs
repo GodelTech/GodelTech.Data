@@ -1,4 +1,7 @@
-﻿namespace GodelTech.Data.Specification
+﻿using System;
+using System.Linq.Expressions;
+
+namespace GodelTech.Data.Specification
 {
     internal class NotSpecification<TEntity, TKey> : CompositeSpecification<TEntity, TKey>
         where TEntity : class, IEntity<TKey>
@@ -10,6 +13,9 @@
             _other = other;
         }
 
-        public override bool IsSatisfiedBy(TEntity candidate) => !_other.IsSatisfiedBy(candidate);
+        public override Expression<Func<TEntity, bool>> AsExpression() =>
+            Expression.Lambda<Func<TEntity, bool>>(
+                Expression.Not(_other.AsExpression().Body),
+                Expression.Parameter(typeof(TEntity)));
     }
 }

@@ -15,15 +15,15 @@ namespace GodelTech.Data.Tests.Query
 
             var mockSpecification = new Mock<ISpecification<FakeEntity<int>, int>>(MockBehavior.Strict);
             mockSpecification
-                .Setup(x => x.IsSatisfiedBy(entity))
-                .Returns(true);
+                .Setup(x => x.AsExpression())
+                .Returns(x => x.Id > 0);
 
             // Act
             var filterRule = new FilterRule<FakeEntity<int>, int>(mockSpecification.Object);
 
             Assert.True(
                 Lambda.Eq(
-                    x => mockSpecification.Object.IsSatisfiedBy(x),
+                    x => x.Id > 0,
                     filterRule.Expression
                 )
             );
