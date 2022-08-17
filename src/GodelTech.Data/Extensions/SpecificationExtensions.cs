@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GodelTech.Data.Specification
+namespace GodelTech.Data
 {
     /// <summary>
     /// Extensions of specification.
@@ -15,15 +15,12 @@ namespace GodelTech.Data.Specification
         /// <param name="specification">The specification.</param>
         /// <returns><cref>QueryParameters</cref>.</returns>
         public static QueryParameters<TEntity, TKey> CreateQueryParameters<TEntity, TKey>(
-            this ISpecification<TEntity, TKey> specification)
+            this Specification<TEntity, TKey> specification)
             where TEntity : class, IEntity<TKey>
         {
             if (specification == null) throw new ArgumentNullException(nameof(specification));
 
-            return new QueryParameters<TEntity, TKey>
-            {
-                Filter = new FilterRule<TEntity, TKey>(specification)
-            };
+            return specification.AsExpression().CreateQueryParameters<TEntity, TKey>();
         }
     }
 }

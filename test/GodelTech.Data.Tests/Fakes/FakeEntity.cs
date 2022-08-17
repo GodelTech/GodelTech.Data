@@ -4,6 +4,8 @@
     {
         public TKey Id { get; set; }
 
+        public string Name { get; set; }
+
         public bool Equals(IEntity<TKey> x, IEntity<TKey> y)
         {
             // Check whether the compared objects reference the same data

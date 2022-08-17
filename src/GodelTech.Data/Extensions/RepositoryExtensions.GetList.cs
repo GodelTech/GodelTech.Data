@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using GodelTech.Data.Specification;
 
 namespace GodelTech.Data
 {
@@ -39,7 +38,7 @@ namespace GodelTech.Data
         /// <returns><cref>IList{TEntity}</cref>.</returns>
         public static IList<TEntity> GetList<TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
-            ISpecification<TEntity, TKey> specification)
+            Specification<TEntity, TKey> specification)
             where TEntity : class, IEntity<TKey>
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
@@ -81,7 +80,7 @@ namespace GodelTech.Data
         /// <returns><cref>IList{TModel}</cref>.</returns>
         public static IList<TModel> GetList<TModel, TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
-            ISpecification<TEntity, TKey> specification)
+            Specification<TEntity, TKey> specification)
             where TEntity : class, IEntity<TKey>
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
@@ -122,7 +121,7 @@ namespace GodelTech.Data
         /// <returns><cref>Task{IList{TModel}}</cref>.</returns>
         public static Task<IList<TEntity>> GetListAsync<TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
-            ISpecification<TEntity, TKey> specification,
+            Specification<TEntity, TKey> specification,
             CancellationToken cancellationToken = default)
             where TEntity : class, IEntity<TKey>
         {
@@ -164,7 +163,7 @@ namespace GodelTech.Data
         /// <returns><cref>Task{IList{TModel}}</cref>.</returns>
         public static Task<IList<TModel>> GetListAsync<TModel, TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
-            ISpecification<TEntity, TKey> specification,
+            Specification<TEntity, TKey> specification,
             CancellationToken cancellationToken = default)
             where TEntity : class, IEntity<TKey>
         {
@@ -187,7 +186,7 @@ namespace GodelTech.Data
 
         private static async Task<IList<TEntity>> GetListInternalAsync<TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
-            ISpecification<TEntity, TKey> specification,
+            Specification<TEntity, TKey> specification,
             CancellationToken cancellationToken = default)
             where TEntity : class, IEntity<TKey>
         {
@@ -211,7 +210,7 @@ namespace GodelTech.Data
 
         private static async Task<IList<TModel>> GetListInternalAsync<TModel, TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
-            ISpecification<TEntity, TKey> specification,
+            Specification<TEntity, TKey> specification,
             CancellationToken cancellationToken = default)
             where TEntity : class, IEntity<TKey>
         {
