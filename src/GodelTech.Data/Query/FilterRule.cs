@@ -23,9 +23,11 @@ namespace GodelTech.Data
         /// Initializes a new instance of the <see cref="FilterRule{TEntity, TKey}"/> class.
         /// </summary>
         /// <param name="specification"></param>
-        public FilterRule(ISpecification<TEntity, TKey> specification)
+        public FilterRule(Specification<TEntity, TKey> specification)
         {
-            Expression = entity => specification.IsSatisfiedBy(entity);
+            if (specification == null) throw new ArgumentNullException(nameof(specification));
+
+            Expression = specification.AsExpression();
         }
 
         /// <summary>

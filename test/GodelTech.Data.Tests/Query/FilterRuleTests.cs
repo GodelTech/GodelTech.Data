@@ -1,32 +1,42 @@
-﻿using GodelTech.Data.Tests.Fakes;
+﻿using System;
+using GodelTech.Data.Tests.Extensions;
+using GodelTech.Data.Tests.Fakes;
 using Moq;
-using Neleus.LambdaCompare;
 using Xunit;
 
 namespace GodelTech.Data.Tests.Query
 {
     public class FilterRuleTests
     {
-        [Fact]
-        public void Constructor()
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Constructor_WhenSpecificationIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
+        {
+            // Arrange & Act & Assert
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => new FilterRule<FakeEntity<TKey>, TKey>(null)
+            );
+
+            Assert.NotNull(defaultKey);
+            Assert.Equal("specification", exception.ParamName);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Constructor<TKey>(TKey defaultKey)
         {
             // Arrange
-            var entity = new FakeEntity<int>();
+            var expression = FilterExpressionExtensions.CreateIdFilterExpression<FakeEntity<TKey>, TKey>(defaultKey);
 
-            var mockSpecification = new Mock<ISpecification<FakeEntity<int>, int>>(MockBehavior.Strict);
+            var mockSpecification = new Mock<Specification<FakeEntity<TKey>, TKey>>(MockBehavior.Strict);
             mockSpecification
-                .Setup(x => x.IsSatisfiedBy(entity))
-                .Returns(true);
+                .Setup(x => x.AsExpression())
+                .Returns(expression);
 
             // Act
-            var filterRule = new FilterRule<FakeEntity<int>, int>(mockSpecification.Object);
+            var filterRule = new FilterRule<FakeEntity<TKey>, TKey>(mockSpecification.Object);
 
-            Assert.True(
-                Lambda.Eq(
-                    x => mockSpecification.Object.IsSatisfiedBy(x),
-                    filterRule.Expression
-                )
-            );
+            Assert.Equal(expression, filterRule.Expression);
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq.Expressions;
-using GodelTech.Data.Specification;
-using GodelTech.Data.Tests.Extensions;
 using GodelTech.Data.Tests.Fakes;
 using Xunit;
 
-namespace GodelTech.Data.Tests.Specification
+namespace GodelTech.Data.Tests.Extensions
 {
     public class SpecificationExtensionsTests
     {
@@ -23,12 +21,11 @@ namespace GodelTech.Data.Tests.Specification
         }
 
         [Theory]
-        [MemberData(nameof(SpecificationBaseTests.IsSatisfiedByMemberData), MemberType = typeof(SpecificationBaseTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
         public void CreateQueryParameters_ReturnsQueryParameters<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,
-            Expression<Func<TEntity, bool>> expression,
-            bool expectedResult)
+            Expression<Func<TEntity, bool>> expression)
             where TEntity : class, IEntity<TKey>
         {
             // Arrange
@@ -43,7 +40,7 @@ namespace GodelTech.Data.Tests.Specification
                 Assert.IsType(defaultKey.GetType(), entity.Id);
             }
 
-            Assert.Equal(expectedResult, result.Filter.Expression.Compile().Invoke(entity));
+            Assert.Equal(result.Filter.Expression, expression);
             Assert.Null(result.Sort);
             Assert.Null(result.Page);
         }

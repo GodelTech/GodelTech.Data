@@ -2,7 +2,6 @@
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using GodelTech.Data.Specification;
 
 namespace GodelTech.Data
 {
@@ -54,7 +53,7 @@ namespace GodelTech.Data
         /// <returns><c>true</c> if exists, <c>false</c> otherwise.</returns>
         public static bool Exists<TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
-            ISpecification<TEntity, TKey> specification)
+            Specification<TEntity, TKey> specification)
             where TEntity : class, IEntity<TKey>
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
@@ -116,7 +115,7 @@ namespace GodelTech.Data
         /// <returns><c>true</c> if exists, <c>false</c> otherwise.</returns>
         public static Task<bool> ExistsAsync<TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
-            ISpecification<TEntity, TKey> specification,
+            Specification<TEntity, TKey> specification,
             CancellationToken cancellationToken = default)
             where TEntity : class, IEntity<TKey>
         {
@@ -139,7 +138,7 @@ namespace GodelTech.Data
 
         private static async Task<bool> ExistsInternalAsync<TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
-            ISpecification<TEntity, TKey> specification,
+            Specification<TEntity, TKey> specification,
             CancellationToken cancellationToken = default)
             where TEntity : class, IEntity<TKey>
         {

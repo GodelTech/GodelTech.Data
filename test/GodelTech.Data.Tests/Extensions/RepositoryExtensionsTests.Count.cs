@@ -78,12 +78,11 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(SpecificationBaseTests.IsSatisfiedByMemberData), MemberType = typeof(SpecificationBaseTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
         public void Count_BySpecification_ReturnsCount<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,
-            Expression<Func<TEntity, bool>> expression,
-            bool expectedResult)
+            Expression<Func<TEntity, bool>> expression)
             where TEntity : class, IEntity<TKey>
         {
             // Arrange
@@ -96,7 +95,7 @@ namespace GodelTech.Data.Tests.Extensions
                     x => x.Count(
                         It.Is<QueryParameters<TEntity, TKey>>(
                             y =>
-                                y.Filter.Expression.Compile().Invoke(entity) == expectedResult
+                                y.Filter.Expression == expression
                                 && y.Sort == null
                                 && y.Page == null
                         )
