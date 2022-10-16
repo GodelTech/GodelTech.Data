@@ -42,8 +42,10 @@ namespace GodelTech.Data.Tests.Query
             SortRule<IEntity<TKey>, TKey> sortRule,
             SortOrder expectedSortOrder)
         {
+            if (sortRule == null) throw new ArgumentNullException(nameof(sortRule));
+
             // Arrange & Act & Assert
-            Assert.Equal(expectedSortOrder, sortRule?.SortOrder);
+            Assert.Equal(expectedSortOrder, sortRule.SortOrder);
         }
 
         public static IEnumerable<object[]> IsValidMemberData =>
@@ -124,8 +126,10 @@ namespace GodelTech.Data.Tests.Query
             bool expectedResult)
             where TEntity : class, IEntity<TKey>
         {
+            if (sortRule == null) throw new ArgumentNullException(nameof(sortRule));
+
             // Arrange & Act & Assert
-            Assert.Equal(expectedResult, sortRule?.IsValid);
+            Assert.Equal(expectedResult, sortRule.IsValid);
         }
     }
 }

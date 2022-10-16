@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using FluentAssertions;
 using GodelTech.Data.Tests.Fakes;
 using Xunit;
 
@@ -100,11 +101,13 @@ namespace GodelTech.Data.Tests
             Collection<FakeModel> expectedItems,
             int expectedTotalCount)
         {
+            if (item == null) throw new ArgumentNullException(nameof(item));
+
             // Arrange & Act & Assert
-            Assert.Equal(expectedPageIndex, item?.PageIndex);
-            Assert.Equal(expectedPageSize, item?.PageSize);
-            Assert.Equal(expectedItems, item?.Items, new FakeModelEqualityComparer());
-            Assert.Equal(expectedTotalCount, item?.TotalCount);
+            Assert.Equal(expectedPageIndex, item.PageIndex);
+            Assert.Equal(expectedPageSize, item.PageSize);
+            item.Items.Should().BeEquivalentTo(expectedItems);
+            Assert.Equal(expectedTotalCount, item.TotalCount);
         }
 
         [Fact]

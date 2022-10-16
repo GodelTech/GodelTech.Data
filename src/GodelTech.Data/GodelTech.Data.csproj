@@ -1,54 +1,54 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<PackageId>GodelTech.Data</PackageId>
-		<VersionPrefix>3.0.1</VersionPrefix>
-		<Authors>v.rodchenko</Authors>
-		<Company>Godel Technologies</Company>
-		<Description>Library to access data storage with Unit of Work, Repository and Entity classes.</Description>
-		<Copyright>Godel Technologies 2020</Copyright>
-		<PackageLicenseUrl>https://github.com/GodelTech/GodelTech.Data/blob/master/LICENSE</PackageLicenseUrl>
-		<PackageProjectUrl>https://github.com/GodelTech/GodelTech.Data/wiki</PackageProjectUrl>
-		<PackageIconUrl>https://www.gravatar.com/avatar/839234621070de51e7b9cabd5ceee8fe?s=64</PackageIconUrl>
-		<RepositoryUrl>https://github.com/GodelTech/GodelTech.Data</RepositoryUrl>
-		<PackageTags>Data UnitOfWork Repository Entity</PackageTags>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>GodelTech.Data</PackageId>
+    <VersionPrefix>3.0.1</VersionPrefix>
+    <Authors>v.rodchenko</Authors>
+    <Company>Godel Technologies</Company>
+    <Description>Library to access data storage with Unit of Work, Repository and Entity classes.</Description>
+    <Copyright>Godel Technologies 2020</Copyright>
+    <PackageLicenseUrl>https://github.com/GodelTech/GodelTech.Data/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/GodelTech/GodelTech.Data/wiki</PackageProjectUrl>
+    <PackageIconUrl>https://www.gravatar.com/avatar/839234621070de51e7b9cabd5ceee8fe?s=64</PackageIconUrl>
+    <RepositoryUrl>https://github.com/GodelTech/GodelTech.Data</RepositoryUrl>
+    <PackageTags>Data UnitOfWork Repository Entity</PackageTags>
 
-		<AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
 
-		<!-- XML documentation -->
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- XML documentation -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-		<!-- Source Link needs this -->
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <!-- Source Link needs this -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
-		<!-- SonarQube needs this -->
-		<ProjectGuid>{00000000-0000-0000-0000-000000000010}</ProjectGuid>
-	</PropertyGroup>
+    <!-- SonarQube needs this -->
+    <ProjectGuid>{00000000-0000-0000-0000-000000000010}</ProjectGuid>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<!-- Source Link needs this -->
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-	</ItemGroup>
+  <ItemGroup>
+    <!-- Source Link needs this -->
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<Compile Update="IRepository.*.cs">
-			<DependentUpon>IRepository.cs</DependentUpon>
-		</Compile>
-	</ItemGroup>
+  <ItemGroup>
+    <Compile Update="IRepository.*.cs">
+      <DependentUpon>IRepository.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
 
-	<ItemGroup>
-		<ProjectCapability Include="DynamicDependentFile" />
-		<ProjectCapability Include="DynamicFileNesting" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="DynamicDependentFile" />
+    <ProjectCapability Include="DynamicFileNesting" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<Compile Update="$(ProjectDir)\Extensions\RepositoryExtensions.*.cs">
-			<DependentUpon>$(ProjectDir)\Extensions\RepositoryExtensions.cs</DependentUpon>
-		</Compile>
-	</ItemGroup>
+  <ItemGroup>
+    <Compile Update="$(ProjectDir)\Extensions\RepositoryExtensions.*.cs">
+      <DependentUpon>$(ProjectDir)\Extensions\RepositoryExtensions.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
 
 </Project>
