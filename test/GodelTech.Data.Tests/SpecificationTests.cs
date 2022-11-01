@@ -126,7 +126,7 @@ namespace GodelTech.Data.Tests
         }
 
         [Theory]
-        [MemberData(nameof(CompositeSpecificationTests.MemberData), MemberType = typeof(CompositeSpecificationTests))]
+        [MemberData(nameof(SpecificationBaseTests.MemberData), MemberType = typeof(SpecificationBaseTests))]
         public void And_Success<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,
@@ -145,7 +145,7 @@ namespace GodelTech.Data.Tests
         }
 
         [Theory]
-        [MemberData(nameof(CompositeSpecificationTests.MemberData), MemberType = typeof(CompositeSpecificationTests))]
+        [MemberData(nameof(SpecificationBaseTests.MemberData), MemberType = typeof(SpecificationBaseTests))]
         public void AndNot_Success<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,
@@ -164,7 +164,7 @@ namespace GodelTech.Data.Tests
         }
 
         [Theory]
-        [MemberData(nameof(CompositeSpecificationTests.MemberData), MemberType = typeof(CompositeSpecificationTests))]
+        [MemberData(nameof(SpecificationBaseTests.MemberData), MemberType = typeof(SpecificationBaseTests))]
         public void Or_Success<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,
@@ -183,7 +183,7 @@ namespace GodelTech.Data.Tests
         }
 
         [Theory]
-        [MemberData(nameof(CompositeSpecificationTests.MemberData), MemberType = typeof(CompositeSpecificationTests))]
+        [MemberData(nameof(SpecificationBaseTests.MemberData), MemberType = typeof(SpecificationBaseTests))]
         public void OrNot_Success<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,
@@ -202,7 +202,7 @@ namespace GodelTech.Data.Tests
         }
 
         [Theory]
-        [MemberData(nameof(CompositeSpecificationTests.MemberData), MemberType = typeof(CompositeSpecificationTests))]
+        [MemberData(nameof(SpecificationBaseTests.MemberData), MemberType = typeof(SpecificationBaseTests))]
         public void Not_Success<TEntity, TKey>(
             TKey defaultKey,
             TEntity entity,

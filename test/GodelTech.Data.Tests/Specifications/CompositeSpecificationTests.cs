@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using GodelTech.Data.Tests.Fakes;
+using GodelTech.Data.Tests.Fakes.Specifications;
 using Moq;
 using Xunit;
 
 namespace GodelTech.Data.Tests.Specifications
 {
-    public static class CompositeSpecificationTests
+    public class CompositeSpecificationTests
     {
         public static IEnumerable<object[]> MemberData =>
             new Collection<object[]>
@@ -21,42 +22,7 @@ namespace GodelTech.Data.Tests.Specifications
                     {
                         Id = new Guid("00000000-0000-0000-0000-000000000001"),
                         Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000001")),
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Name == "TestName")
-                },
-                new object[]
-                {
-                    default(Guid),
-                    new FakeEntity<Guid>
-                    {
-                        Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000001")),
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Name == "Other TestName")
-                },
-                new object[]
-                {
-                    default(Guid),
-                    new FakeEntity<Guid>
-                    {
-                        Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000002")),
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Name == "TestName")
-                },
-                new object[]
-                {
-                    default(Guid),
-                    new FakeEntity<Guid>
-                    {
-                        Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000002")),
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Name == "Other TestName")
+                    }
                 },
                 // int
                 new object[]
@@ -66,42 +32,7 @@ namespace GodelTech.Data.Tests.Specifications
                     {
                         Id = 1,
                         Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Id == 1),
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Name == "TestName")
-                },
-                new object[]
-                {
-                    default(int),
-                    new FakeEntity<int>
-                    {
-                        Id = 1,
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Id == 1),
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Name == "Other TestName")
-                },
-                new object[]
-                {
-                    default(int),
-                    new FakeEntity<int>
-                    {
-                        Id = 1,
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Id == 2),
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Name == "TestName")
-                },
-                new object[]
-                {
-                    default(int),
-                    new FakeEntity<int>
-                    {
-                        Id = 1,
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Id == 2),
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Name == "Other TestName")
+                    }
                 },
                 // string
                 new object[]
@@ -111,69 +42,27 @@ namespace GodelTech.Data.Tests.Specifications
                     {
                         Id = "TestId",
                         Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Id == "TestId"),
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Name == "TestName")
-                },
-                new object[]
-                {
-                    string.Empty,
-                    new FakeEntity<string>
-                    {
-                        Id = "TestId",
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Id == "TestId"),
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Name == "Other TestName")
-                },
-                new object[]
-                {
-                    string.Empty,
-                    new FakeEntity<string>
-                    {
-                        Id = "TestId",
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Id == "OtherTestId"),
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Name == "TestName")
-                },
-                new object[]
-                {
-                    string.Empty,
-                    new FakeEntity<string>
-                    {
-                        Id = "TestId",
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Id == "OtherTestId"),
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Name == "Other TestName")
+                    }
                 }
             };
 
-        public static void AsExpression_Success<TEntity, TKey>(
+        [Theory]
+        [MemberData(nameof(MemberData))]
+        public void AsExpression_Success<TEntity, TKey>(
             TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> leftExpression,
-            Expression<Func<TEntity, bool>> rightExpression,
-            Func<Specification<TEntity, TKey>, Specification<TEntity, TKey>, Specification<TEntity, TKey>> specification,
-            bool expectedBooleanResult)
+            TEntity entity)
             where TEntity : class, IEntity<TKey>
         {
-            if (specification == null) throw new ArgumentNullException(nameof(specification));
-
             // Arrange
             var leftSpecification = new Mock<Specification<TEntity, TKey>>(MockBehavior.Strict);
-            leftSpecification
-                .Setup(x => x.AsExpression())
-                .Returns(leftExpression);
 
             var rightSpecification = new Mock<Specification<TEntity, TKey>>(MockBehavior.Strict);
-            rightSpecification
-                .Setup(x => x.AsExpression())
-                .Returns(rightExpression);
 
             // Act
-            var result = specification(leftSpecification.Object, rightSpecification.Object).AsExpression();
+            var result = new FakeNullCompositeSpecification<BinaryExpression, TEntity, TKey>(
+                leftSpecification.Object,
+                rightSpecification.Object
+            ).AsExpression();
 
             // Assert
             if (entity != null && entity.Id != null)
@@ -181,10 +70,7 @@ namespace GodelTech.Data.Tests.Specifications
                 Assert.IsType(defaultKey.GetType(), entity.Id);
             }
 
-            Assert.Equal(
-                expectedBooleanResult,
-                result.Compile().Invoke(entity)
-            );
+            Assert.Null(result);
         }
     }
 }

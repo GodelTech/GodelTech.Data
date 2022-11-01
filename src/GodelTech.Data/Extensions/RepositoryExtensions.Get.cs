@@ -261,7 +261,7 @@ namespace GodelTech.Data
         private static async Task<TEntity> GetInternalAsync<TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
             Expression<Func<TEntity, bool>> filterExpression,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
             where TEntity : class, IEntity<TKey>
         {
             return await repository.GetAsync(
@@ -273,7 +273,7 @@ namespace GodelTech.Data
         private static async Task<TEntity> GetInternalAsync<TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
             Specification<TEntity, TKey> specification,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
             where TEntity : class, IEntity<TKey>
         {
             return await repository.GetAsync(
@@ -285,7 +285,7 @@ namespace GodelTech.Data
         private static async Task<TModel> GetInternalAsync<TModel, TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
             Expression<Func<TEntity, bool>> filterExpression,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
             where TEntity : class, IEntity<TKey>
         {
             return await repository.GetAsync<TModel>(
@@ -297,7 +297,7 @@ namespace GodelTech.Data
         private static async Task<TModel> GetInternalAsync<TModel, TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
             Specification<TEntity, TKey> specification,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
             where TEntity : class, IEntity<TKey>
         {
             return await repository.GetAsync<TModel>(
