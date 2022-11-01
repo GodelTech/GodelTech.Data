@@ -174,8 +174,8 @@ namespace GodelTech.Data
 
         private static async Task<IList<TEntity>> GetListInternalAsync<TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
-            Expression<Func<TEntity, bool>> filterExpression = null,
-            CancellationToken cancellationToken = default)
+            Expression<Func<TEntity, bool>> filterExpression,
+            CancellationToken cancellationToken)
             where TEntity : class, IEntity<TKey>
         {
             return await repository.GetListAsync(
@@ -187,7 +187,7 @@ namespace GodelTech.Data
         private static async Task<IList<TEntity>> GetListInternalAsync<TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
             Specification<TEntity, TKey> specification,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
             where TEntity : class, IEntity<TKey>
         {
             return await repository.GetListAsync(
@@ -198,8 +198,8 @@ namespace GodelTech.Data
 
         private static async Task<IList<TModel>> GetListInternalAsync<TModel, TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
-            Expression<Func<TEntity, bool>> filterExpression = null,
-            CancellationToken cancellationToken = default)
+            Expression<Func<TEntity, bool>> filterExpression,
+            CancellationToken cancellationToken)
             where TEntity : class, IEntity<TKey>
         {
             return await repository.GetListAsync<TModel>(
@@ -211,7 +211,7 @@ namespace GodelTech.Data
         private static async Task<IList<TModel>> GetListInternalAsync<TModel, TEntity, TKey>(
             this IRepository<TEntity, TKey> repository,
             Specification<TEntity, TKey> specification,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
             where TEntity : class, IEntity<TKey>
         {
             return await repository.GetListAsync<TModel>(
