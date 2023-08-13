@@ -2,8 +2,5 @@
 
 source ../Git.Hooks/global/pre-push
 
-## terraform
-source ../Git.Hooks/terraform/pre-push
-
 ## dotnet
 source ../Git.Hooks/dotnet/pre-push
