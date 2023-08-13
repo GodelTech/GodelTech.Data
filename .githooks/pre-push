@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+source ../Git.Hooks/dotnet/pre-push
