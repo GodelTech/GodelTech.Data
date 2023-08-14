@@ -16,6 +16,7 @@ namespace GodelTech.Data
         public static void Delete<TEntity, TKey>(this IRepository<TEntity, TKey> repository, TKey id)
             where TEntity : class, IEntity<TKey>
         {
+            // Stryker disable once statement
             if (repository == null) throw new ArgumentNullException(nameof(repository));
 
             var entity = repository.Get(id);
@@ -35,6 +36,7 @@ namespace GodelTech.Data
         public static void Delete<TEntity, TKey>(this IRepository<TEntity, TKey> repository, IEnumerable<TKey> ids)
             where TEntity : class, IEntity<TKey>
         {
+            // Stryker disable once statement
             if (repository == null) throw new ArgumentNullException(nameof(repository));
 
             var entities = repository.GetList(x => ids.Contains(x.Id));

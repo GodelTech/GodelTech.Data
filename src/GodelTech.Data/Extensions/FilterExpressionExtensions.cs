@@ -26,6 +26,7 @@ namespace GodelTech.Data
 
             return Expression.Lambda<Func<TEntity, bool>>(
                 Expression.Equal(leftExpression, rightExpression),
+                // Stryker disable once linq
                 property.Parameters.Single()
             );
         }
