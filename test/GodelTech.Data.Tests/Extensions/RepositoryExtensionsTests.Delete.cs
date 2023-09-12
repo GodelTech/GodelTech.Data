@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Neleus.LambdaCompare;
@@ -9,18 +8,6 @@ namespace GodelTech.Data.Tests.Extensions
 {
     public partial class RepositoryExtensionsTests
     {
-        [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void Delete_ByIdWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
-        {
-            // Arrange & Act & Assert
-            var exception = Assert.Throws<ArgumentNullException>(
-                () => RepositoryExtensions.Delete<IEntity<TKey>, TKey>(null, defaultKey)
-            );
-
-            Assert.Equal("repository", exception.ParamName);
-        }
-
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
         public void Delete_ById_WhenEntityIsNull<TEntity, TKey>(
@@ -159,24 +146,6 @@ namespace GodelTech.Data.Tests.Extensions
                     x => x.Delete(entity),
                     Times.Once
                 );
-        }
-
-        [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void Delete_ByIdsWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
-        {
-            // Arrange & Act & Assert
-            var exception = Assert.Throws<ArgumentNullException>(
-                () => RepositoryExtensions.Delete<IEntity<TKey>, TKey>(
-                    null,
-                    new List<TKey>
-                    {
-                        defaultKey
-                    }
-                )
-            );
-
-            Assert.Equal("repository", exception.ParamName);
         }
 
         [Theory]

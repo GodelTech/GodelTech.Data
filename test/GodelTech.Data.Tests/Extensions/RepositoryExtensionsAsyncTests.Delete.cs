@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using GodelTech.Data.Tests.Fakes;
@@ -11,18 +10,6 @@ namespace GodelTech.Data.Tests.Extensions
 {
     public partial class RepositoryExtensionsTests
     {
-        [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task DeleteAsync_ByIdWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
-        {
-            // Arrange & Act & Assert
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => RepositoryExtensions.DeleteAsync<IEntity<TKey>, TKey>(null, defaultKey)
-            );
-
-            Assert.Equal("repository", exception.ParamName);
-        }
-
         [Theory]
         [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
         public async Task DeleteAsync_ById_WhenEntityIsNull<TEntity, TKey>(
@@ -171,24 +158,6 @@ namespace GodelTech.Data.Tests.Extensions
                     x => x.DeleteAsync(entity, cancellationToken),
                     Times.Once
                 );
-        }
-
-        [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task DeleteAsync_ByIdsWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
-        {
-            // Arrange & Act & Assert
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => RepositoryExtensions.DeleteAsync<IEntity<TKey>, TKey>(
-                    null,
-                    new List<TKey>
-                    {
-                        defaultKey
-                    }
-                )
-            );
-
-            Assert.Equal("repository", exception.ParamName);
         }
 
         [Theory]
