@@ -101,8 +101,6 @@ namespace GodelTech.Data.Tests
             Collection<FakeModel> expectedItems,
             int expectedTotalCount)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
-
             // Arrange & Act & Assert
             Assert.Equal(expectedPageIndex, item.PageIndex);
             Assert.Equal(expectedPageSize, item.PageSize);

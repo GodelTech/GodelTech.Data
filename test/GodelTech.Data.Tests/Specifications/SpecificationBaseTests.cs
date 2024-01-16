@@ -166,9 +166,6 @@ namespace GodelTech.Data.Tests.Specifications
             Expression<Func<TEntity, bool>> rightExpression)
             where TEntity : class, IEntity<TKey>
         {
-            if (leftExpression == null) throw new ArgumentNullException(nameof(leftExpression));
-            if (rightExpression == null) throw new ArgumentNullException(nameof(rightExpression));
-
             // Arrange
             var leftSpecification = new Mock<Specification<TEntity, TKey>>(MockBehavior.Strict);
             leftSpecification

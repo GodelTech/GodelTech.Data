@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Xunit;
 
@@ -73,8 +72,6 @@ namespace GodelTech.Data.Tests.Query
             PageRule pageRule,
             bool expectedResult)
         {
-            if (pageRule == null) throw new ArgumentNullException(nameof(pageRule));
-
             // Arrange & Act & Assert
             Assert.Equal(expectedResult, pageRule.IsValid);
         }
