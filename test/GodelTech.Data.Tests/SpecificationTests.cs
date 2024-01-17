@@ -229,8 +229,6 @@ namespace GodelTech.Data.Tests
             Func<Specification<TEntity, TKey>, Specification<TEntity, TKey>, Specification<TEntity, TKey>> expectedResult)
             where TEntity : class, IEntity<TKey>
         {
-            if (method == null) throw new ArgumentNullException(nameof(method));
-
             // Arrange
             var specification = new FakeSpecification<TEntity, TKey>(leftExpression);
 
