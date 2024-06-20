@@ -11,32 +11,26 @@ namespace GodelTech.Data.Tests.Extensions
     public partial class RepositoryExtensionsTests
     {
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
         public async Task DeleteAsync_ById_WhenEntityIsNull<TEntity, TKey>(
-            TKey defaultKey,
+            TKey id,
             TEntity entity,
-            object id,
             bool expectedResult)
             where TEntity : class, IEntity<TKey>
         {
             // Arrange
             var cancellationToken = new CancellationToken();
 
-            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>((TKey) id);
+            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>(id);
 
             var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
 
             mockRepository
                 .Setup(
                     x => x.GetAsync(
-                        It.Is<QueryParameters<TEntity, TKey>>(
-                            y => Lambda.Eq(
-                                     y.Filter.Expression,
-                                     filterExpression
-                                 )
-                                 && y.Sort == null
-                                 && y.Page == null
-                        ),
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<TEntity, TKey>(filterExpression),
                         cancellationToken
                     )
                 )
@@ -49,14 +43,9 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            await repository.DeleteAsync((TKey) id, cancellationToken);
+            await repository.DeleteAsync(id, cancellationToken);
 
             // Assert
-            if (id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), id);
-            }
-
             Assert.Equal(
                 expectedResult,
                 filterExpression.Compile().Invoke(entity)
@@ -65,14 +54,7 @@ namespace GodelTech.Data.Tests.Extensions
             mockRepository
                 .Verify(
                     x => x.GetAsync(
-                        It.Is<QueryParameters<TEntity, TKey>>(
-                            y => Lambda.Eq(
-                                     y.Filter.Expression,
-                                     filterExpression
-                                 )
-                                 && y.Sort == null
-                                 && y.Page == null
-                        ),
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<TEntity, TKey>(filterExpression),
                         cancellationToken
                     ),
                     Times.Once
@@ -86,32 +68,26 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
         public async Task DeleteAsync_ById_WhenEntityIsNotNull<TEntity, TKey>(
-            TKey defaultKey,
+            TKey id,
             TEntity entity,
-            object id,
             bool expectedResult)
             where TEntity : class, IEntity<TKey>
         {
             // Arrange
             var cancellationToken = new CancellationToken();
 
-            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>((TKey) id);
+            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>(id);
 
             var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
 
             mockRepository
                 .Setup(
                     x => x.GetAsync(
-                        It.Is<QueryParameters<TEntity, TKey>>(
-                            y => Lambda.Eq(
-                                     y.Filter.Expression,
-                                     filterExpression
-                                 )
-                                 && y.Sort == null
-                                 && y.Page == null
-                        ),
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<TEntity, TKey>(filterExpression),
                         cancellationToken
                     )
                 )
@@ -124,14 +100,9 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            await repository.DeleteAsync((TKey) id, cancellationToken);
+            await repository.DeleteAsync(id, cancellationToken);
 
             // Assert
-            if (id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), id);
-            }
-
             Assert.Equal(
                 expectedResult,
                 filterExpression.Compile().Invoke(entity)
@@ -140,14 +111,7 @@ namespace GodelTech.Data.Tests.Extensions
             mockRepository
                 .Verify(
                     x => x.GetAsync(
-                        It.Is<QueryParameters<TEntity, TKey>>(
-                            y => Lambda.Eq(
-                                     y.Filter.Expression,
-                                     filterExpression
-                                 )
-                                 && y.Sort == null
-                                 && y.Page == null
-                        ),
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<TEntity, TKey>(filterExpression),
                         cancellationToken
                     ),
                     Times.Once
@@ -161,15 +125,17 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task DeleteAsync_ByIdsListIsEmpty<TKey>(TKey defaultKey)
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task DeleteAsync_ByIdsListIsEmpty<TKey>(TKey id)
         {
             // Arrange
             var cancellationToken = new CancellationToken();
 
             var ids = new List<TKey>
             {
-                defaultKey
+                id
             };
 
             var mockRepository = new Mock<IRepository<FakeEntity<TKey>, TKey>>(MockBehavior.Strict);
@@ -200,15 +166,17 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public async Task DeleteAsync_ByIds<TKey>(TKey defaultKey)
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task DeleteAsync_ByIds<TKey>(TKey id)
         {
             // Arrange
             var cancellationToken = new CancellationToken();
 
             var ids = new List<TKey>
             {
-                defaultKey
+                id
             };
 
             var entities = new List<FakeEntity<TKey>>
