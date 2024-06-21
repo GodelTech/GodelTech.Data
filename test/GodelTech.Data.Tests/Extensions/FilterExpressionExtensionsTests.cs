@@ -158,16 +158,16 @@ namespace GodelTech.Data.Tests.Extensions
             );
         }
 
-        public static TheoryData<Guid> TypesGuidTestData => 
+        public static TheoryData<Guid> TypesGuidTestData =>
             new TheoryData<Guid>
             {
-                default(Guid)
+                default
             };
 
         public static TheoryData<int> TypesIntTestData =>
             new TheoryData<int>
             {
-                default(int)
+                default
             };
 
         public static TheoryData<string> TypesStringTestData =>
