@@ -1,7 +1,7 @@
 ﻿using System;
 using Xunit;
 
-namespace GodelTech.Data.Tests.Fakes
+namespace GodelTech.Data.Tests.TestData
 {
     public static class TypesTestData
     {
