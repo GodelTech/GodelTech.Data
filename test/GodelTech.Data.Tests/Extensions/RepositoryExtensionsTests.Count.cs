@@ -54,6 +54,32 @@ namespace GodelTech.Data.Tests.Extensions
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Count_ByFilterExpressionWhenFilterExpressionIsNull_ReturnsCount<TKey>(TKey id)
+        {
+            // Arrange
+            var mockRepository = new Mock<IRepository<IEntity<TKey>, TKey>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.Count(
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<IEntity<TKey>, TKey>(null)
+                    )
+                )
+                .Returns(1);
+
+            var repository = mockRepository.Object;
+
+            // Act
+            var result = repository.Count(filterExpression: null);
+
+            // Assert
+            Assert.Equal(1, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
         public void Count_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey id)
         {
             // Arrange & Act & Assert

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq.Expressions;
 using GodelTech.Data.Tests.Fakes;
 using Moq;
-using Neleus.LambdaCompare;
 using Xunit;
 
 namespace GodelTech.Data.Tests.Extensions
@@ -83,6 +81,32 @@ namespace GodelTech.Data.Tests.Extensions
 
             // Act
             var result = repository.Exists(filterExpression);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Exists_ByFilterExpressionWhenFilterExpressionIsNull_ReturnsResult<TKey>(TKey id)
+        {
+            // Arrange
+            var mockRepository = new Mock<IRepository<IEntity<TKey>, TKey>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.Exists(
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<IEntity<TKey>, TKey>(null)
+                    )
+                )
+                .Returns(true);
+
+            var repository = mockRepository.Object;
+
+            // Act
+            var result = repository.Exists(filterExpression: null);
 
             // Assert
             Assert.True(result);

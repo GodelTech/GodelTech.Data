@@ -58,6 +58,35 @@ namespace GodelTech.Data.Tests.Extensions
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task CountAsync_ByFilterExpressionWhenFilterExpressionIsNull_ReturnsCount<TKey>(TKey id)
+        {
+            // Arrange
+            var cancellationToken = new CancellationToken();
+
+            var mockRepository = new Mock<IRepository<IEntity<TKey>, TKey>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.CountAsync(
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<IEntity<TKey>, TKey>(null),
+                        cancellationToken
+                    )
+                )
+                .ReturnsAsync(1);
+
+            var repository = mockRepository.Object;
+
+            // Act
+            var result = await repository.CountAsync(filterExpression: null, cancellationToken);
+
+            // Assert
+            Assert.Equal(1, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
         public async Task CountAsync_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey id)
         {
             // Arrange & Act & Assert

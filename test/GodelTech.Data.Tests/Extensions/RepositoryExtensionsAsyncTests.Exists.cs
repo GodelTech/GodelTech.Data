@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GodelTech.Data.Tests.Fakes;
 using Moq;
-using Neleus.LambdaCompare;
 using Xunit;
 
 namespace GodelTech.Data.Tests.Extensions
@@ -91,6 +89,35 @@ namespace GodelTech.Data.Tests.Extensions
 
             // Act
             var result = await repository.ExistsAsync(filterExpression, cancellationToken);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task ExistsAsync_ByFilterExpressionWhenFilterExpressionIsNull_ReturnsResult<TKey>(TKey id)
+        {
+            // Arrange
+            var cancellationToken = new CancellationToken();
+
+            var mockRepository = new Mock<IRepository<IEntity<TKey>, TKey>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.ExistsAsync(
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<IEntity<TKey>, TKey>(null),
+                        cancellationToken
+                    )
+                )
+                .ReturnsAsync(true);
+
+            var repository = mockRepository.Object;
+
+            // Act
+            var result = await repository.ExistsAsync(filterExpression: null, cancellationToken);
 
             // Assert
             Assert.True(result);

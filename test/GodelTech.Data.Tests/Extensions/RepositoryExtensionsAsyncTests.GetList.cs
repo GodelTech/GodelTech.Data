@@ -62,6 +62,37 @@ namespace GodelTech.Data.Tests.Extensions
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
         [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetListAsync_ByFilterExpressionWhenFilterExpressionIsNull_ReturnsEntities<TKey>(TKey id)
+        {
+            // Arrange
+            var cancellationToken = new CancellationToken();
+
+            var list = new List<IEntity<TKey>>();
+
+            var mockRepository = new Mock<IRepository<IEntity<TKey>, TKey>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.GetListAsync(
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<IEntity<TKey>, TKey>(null),
+                        cancellationToken
+                    )
+                )
+                .ReturnsAsync(list);
+
+            var repository = mockRepository.Object;
+
+            // Act
+            var result = await repository.GetListAsync(filterExpression: null, cancellationToken);
+
+            // Assert
+            Assert.Equal(list, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
         public async Task GetListAsync_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey id)
         {
             // Arrange & Act & Assert
@@ -152,6 +183,37 @@ namespace GodelTech.Data.Tests.Extensions
 
             // Act
             var result = await repository.GetListAsync<FakeModel, IEntity<TKey>, TKey>(filterExpression, cancellationToken);
+
+            // Assert
+            Assert.Equal(list, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public async Task GetListModelAsync_ByFilterExpressionWhenFilterExpressionIsNull_ReturnsEntities<TKey>(TKey id)
+        {
+            // Arrange
+            var cancellationToken = new CancellationToken();
+
+            var list = new List<FakeModel>();
+
+            var mockRepository = new Mock<IRepository<IEntity<TKey>, TKey>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.GetListAsync<FakeModel>(
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<IEntity<TKey>, TKey>(null),
+                        cancellationToken
+                    )
+                )
+                .ReturnsAsync(list);
+
+            var repository = mockRepository.Object;
+
+            // Act
+            var result = await repository.GetListAsync<FakeModel, IEntity<TKey>, TKey>(filterExpression: null, cancellationToken);
 
             // Assert
             Assert.Equal(list, result);

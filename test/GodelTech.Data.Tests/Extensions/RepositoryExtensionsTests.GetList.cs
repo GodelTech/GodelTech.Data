@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Xunit;
@@ -48,6 +47,34 @@ namespace GodelTech.Data.Tests.Extensions
 
             // Act
             var result = repository.GetList(filterExpression);
+
+            // Assert
+            Assert.Equal(list, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void GetList_ByFilterExpressionWhenFilterExpressionIsNull_ReturnsEntities<TKey>(TKey id)
+        {
+            // Arrange
+            var list = new List<IEntity<TKey>>();
+
+            var mockRepository = new Mock<IRepository<IEntity<TKey>, TKey>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.GetList(
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<IEntity<TKey>, TKey>(null)
+                    )
+                )
+                .Returns(list);
+
+            var repository = mockRepository.Object;
+
+            // Act
+            var result = repository.GetList(filterExpression: null);
 
             // Assert
             Assert.Equal(list, result);
@@ -143,6 +170,34 @@ namespace GodelTech.Data.Tests.Extensions
 
             // Act
             var result = repository.GetList<FakeModel, IEntity<TKey>, TKey>(filterExpression);
+
+            // Assert
+            Assert.Equal(list, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void GetListModel_ByFilterExpressionWhenFilterExpressionIsNull_ReturnsEntities<TKey>(TKey id)
+        {
+            // Arrange
+            var list = new List<FakeModel>();
+
+            var mockRepository = new Mock<IRepository<IEntity<TKey>, TKey>>(MockBehavior.Strict);
+
+            mockRepository
+                .Setup(
+                    x => x.GetList<FakeModel>(
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<IEntity<TKey>, TKey>(null)
+                    )
+                )
+                .Returns(list);
+
+            var repository = mockRepository.Object;
+
+            // Act
+            var result = repository.GetList<FakeModel, IEntity<TKey>, TKey>(filterExpression: null);
 
             // Assert
             Assert.Equal(list, result);
