@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq.Expressions;
 using GodelTech.Data.Specifications;
 using GodelTech.Data.Tests.Fakes;
 using GodelTech.Data.Tests.Specifications;
@@ -12,230 +9,193 @@ namespace GodelTech.Data.Tests
 {
     public class SpecificationTests
     {
-        public static IEnumerable<object[]> IsSatisfiedByMemberData =>
-            new Collection<object[]>
+        public static TheoryData<Guid, IEntity<Guid>, bool> IsSatisfiedGuidTestData =>
+            new TheoryData<Guid, IEntity<Guid>, bool>
             {
-                // Guid
-                new object[]
                 {
-                    default(Guid),
+                    new Guid("00000000-0000-0000-0000-000000000001"),
                     new FakeEntity<Guid>(),
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000001")),
                     false
                 },
-                new object[]
                 {
-                    default(Guid),
+                    new Guid("00000000-0000-0000-0000-000000000001"),
                     new FakeEntity<Guid>
                     {
                         Id = new Guid("00000000-0000-0000-0000-000000000002")
                     },
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000001")),
                     false
                 },
-                new object[]
                 {
-                    default(Guid),
+                    new Guid("00000000-0000-0000-0000-000000000001"),
                     new FakeEntity<Guid>
                     {
                         Id = new Guid("00000000-0000-0000-0000-000000000001")
                     },
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000001")),
                     true
-                },
-                // int
-                new object[]
+                }
+            };
+
+        public static TheoryData<int, IEntity<int>, bool> IsSatisfiedIntTestData =>
+            new TheoryData<int, IEntity<int>, bool>
+            {
                 {
-                    default(int),
+                    1,
                     new FakeEntity<int>(),
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Id == 1),
                     false
                 },
-                new object[]
                 {
-                    default(int),
+                    1,
                     new FakeEntity<int>
                     {
                         Id = 2
                     },
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Id == 1),
                     false
                 },
-                new object[]
                 {
-                    default(int),
+                    1,
                     new FakeEntity<int>
                     {
                         Id = 1
                     },
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Id == 1),
                     true
-                },
-                // string
-                new object[]
+                }
+            };
+
+        public static TheoryData<string, IEntity<string>, bool> IsSatisfiedStringTestData =>
+            new TheoryData<string, IEntity<string>, bool>
+            {
                 {
-                    string.Empty,
+                    "TestId",
                     new FakeEntity<string>(),
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Id == "TestId"),
                     false
                 },
-                new object[]
                 {
-                    string.Empty,
+                    "TestId",
                     new FakeEntity<string>
                     {
                         Id = "Other TestId"
                     },
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Id == "TestId"),
                     false
                 },
-                new object[]
                 {
-                    string.Empty,
+                    "TestId",
                     new FakeEntity<string>
                     {
                         Id = "TestId"
                     },
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Id == "TestId"),
                     true
                 }
             };
 
         [Theory]
-        [MemberData(nameof(IsSatisfiedByMemberData))]
+        [MemberData(nameof(IsSatisfiedGuidTestData))]
+        [MemberData(nameof(IsSatisfiedIntTestData))]
+        [MemberData(nameof(IsSatisfiedStringTestData))]
         public void IsSatisfiedBy_Success<TEntity, TKey>(
-            TKey defaultKey,
+            TKey id,
             TEntity entity,
-            Expression<Func<TEntity, bool>> expression,
             bool expectedResult)
             where TEntity : class, IEntity<TKey>
         {
             // Arrange
-            var specification = new FakeSpecification<TEntity, TKey>(expression);
+            var specification = new FakeSpecification<TEntity, TKey>(x => x.Id != null && x.Id.Equals(id));
 
             // Act
             var result = specification.IsSatisfiedBy(entity);
 
             // Assert
-            if (entity != null && entity.Id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), entity.Id);
-            }
-
             Assert.Equal(expectedResult, result);
         }
 
         [Theory]
-        [MemberData(nameof(SpecificationBaseTests.MemberData), MemberType = typeof(SpecificationBaseTests))]
-        public void And_Success<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> leftExpression,
-            Expression<Func<TEntity, bool>> rightExpression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(SpecificationBaseTests.SpecificationGuidTestData), MemberType = typeof(SpecificationBaseTests))]
+        public void And_Success<TKey, TSpecificationTestDataModel>(
+            TKey id,
+            TSpecificationTestDataModel model)
+            where TSpecificationTestDataModel : SpecificationTestDataModel<TKey>
         {
             Method_Success(
-                defaultKey,
-                entity,
-                leftExpression,
-                rightExpression,
+                id,
+                model,
                 (specification, other) => specification.And(other),
-                (left, right) => new AndSpecification<TEntity, TKey>(left, right)
+                (left, right) => new AndSpecification<FakeEntity<TKey>, TKey>(left, right)
             );
         }
 
         [Theory]
-        [MemberData(nameof(SpecificationBaseTests.MemberData), MemberType = typeof(SpecificationBaseTests))]
-        public void AndNot_Success<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> leftExpression,
-            Expression<Func<TEntity, bool>> rightExpression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(SpecificationBaseTests.SpecificationGuidTestData), MemberType = typeof(SpecificationBaseTests))]
+        public void AndNot_Success<TKey, TSpecificationTestDataModel>(
+            TKey id,
+            TSpecificationTestDataModel model)
+            where TSpecificationTestDataModel : SpecificationTestDataModel<TKey>
         {
             Method_Success(
-                defaultKey,
-                entity,
-                leftExpression,
-                rightExpression,
+                id,
+                model,
                 (specification, other) => specification.AndNot(other),
-                (left, right) => new AndNotSpecification<TEntity, TKey>(left, right)
+                (left, right) => new AndNotSpecification<FakeEntity<TKey>, TKey>(left, right)
             );
         }
 
         [Theory]
-        [MemberData(nameof(SpecificationBaseTests.MemberData), MemberType = typeof(SpecificationBaseTests))]
-        public void Or_Success<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> leftExpression,
-            Expression<Func<TEntity, bool>> rightExpression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(SpecificationBaseTests.SpecificationGuidTestData), MemberType = typeof(SpecificationBaseTests))]
+        public void Or_Success<TKey, TSpecificationTestDataModel>(
+            TKey id,
+            TSpecificationTestDataModel model)
+            where TSpecificationTestDataModel : SpecificationTestDataModel<TKey>
         {
             Method_Success(
-                defaultKey,
-                entity,
-                leftExpression,
-                rightExpression,
+                id,
+                model,
                 (specification, other) => specification.Or(other),
-                (left, right) => new OrSpecification<TEntity, TKey>(left, right)
+                (left, right) => new OrSpecification<FakeEntity<TKey>, TKey>(left, right)
             );
         }
 
         [Theory]
-        [MemberData(nameof(SpecificationBaseTests.MemberData), MemberType = typeof(SpecificationBaseTests))]
-        public void OrNot_Success<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> leftExpression,
-            Expression<Func<TEntity, bool>> rightExpression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(SpecificationBaseTests.SpecificationGuidTestData), MemberType = typeof(SpecificationBaseTests))]
+        public void OrNot_Success<TKey, TSpecificationTestDataModel>(
+            TKey id,
+            TSpecificationTestDataModel model)
+            where TSpecificationTestDataModel : SpecificationTestDataModel<TKey>
         {
             Method_Success(
-                defaultKey,
-                entity,
-                leftExpression,
-                rightExpression,
+                id,
+                model,
                 (specification, other) => specification.OrNot(other),
-                (left, right) => new OrNotSpecification<TEntity, TKey>(left, right)
+                (left, right) => new OrNotSpecification<FakeEntity<TKey>, TKey>(left, right)
             );
         }
 
         [Theory]
-        [MemberData(nameof(SpecificationBaseTests.MemberData), MemberType = typeof(SpecificationBaseTests))]
-        public void Not_Success<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> leftExpression,
-            Expression<Func<TEntity, bool>> rightExpression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(SpecificationBaseTests.SpecificationGuidTestData), MemberType = typeof(SpecificationBaseTests))]
+        public void Not_Success<TKey, TSpecificationTestDataModel>(
+            TKey id,
+            TSpecificationTestDataModel model)
+            where TSpecificationTestDataModel : SpecificationTestDataModel<TKey>
         {
             Method_Success(
-                defaultKey,
-                entity,
-                leftExpression,
-                rightExpression,
+                id,
+                model,
                 (specification, _) => specification.Not(),
-                (left, _) => new NotSpecification<TEntity, TKey>(left)
+                (left, _) => new NotSpecification<FakeEntity<TKey>, TKey>(left)
             );
         }
 
-        private static void Method_Success<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> leftExpression,
-            Expression<Func<TEntity, bool>> rightExpression,
-            Func<Specification<TEntity, TKey>, Specification<TEntity, TKey>, Specification<TEntity, TKey>> method,
-            Func<Specification<TEntity, TKey>, Specification<TEntity, TKey>, Specification<TEntity, TKey>> expectedResult)
-            where TEntity : class, IEntity<TKey>
+        private static void Method_Success<TKey, TSpecificationTestDataModel>(
+            TKey id,
+            TSpecificationTestDataModel model,
+            Func<Specification<FakeEntity<TKey>, TKey>, Specification<FakeEntity<TKey>, TKey>, Specification<FakeEntity<TKey>, TKey>> method,
+            Func<Specification<FakeEntity<TKey>, TKey>, Specification<FakeEntity<TKey>, TKey>, Specification<FakeEntity<TKey>, TKey>> expectedResult)
+            where TSpecificationTestDataModel : SpecificationTestDataModel<TKey>
         {
             // Arrange
-            var specification = new FakeSpecification<TEntity, TKey>(leftExpression);
+            var specification = new FakeSpecification<FakeEntity<TKey>, TKey>(model.LeftExpression);
 
-            var rightSpecification = new Mock<Specification<TEntity, TKey>>(MockBehavior.Strict);
+            var rightSpecification = new Mock<Specification<FakeEntity<TKey>, TKey>>(MockBehavior.Strict);
             rightSpecification
                 .Setup(x => x.AsExpression())
-                .Returns(rightExpression);
+                .Returns(model.RightExpression);
 
             var expectedResultObject = expectedResult(specification, rightSpecification.Object);
 
@@ -243,16 +203,13 @@ namespace GodelTech.Data.Tests
             var result = method(specification, rightSpecification.Object);
 
             // Assert
-            if (entity != null && entity.Id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), entity.Id);
-            }
+            Assert.NotNull(id);
 
             Assert.IsType(expectedResultObject.GetType(), result);
 
             Assert.Equal(
-                expectedResultObject.AsExpression().Compile().Invoke(entity),
-                result.AsExpression().Compile().Invoke(entity)
+                expectedResultObject.AsExpression().Compile().Invoke(model.Entity),
+                result.AsExpression().Compile().Invoke(model.Entity)
             );
         }
     }
