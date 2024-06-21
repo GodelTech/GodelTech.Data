@@ -77,6 +77,7 @@ namespace GodelTech.Data.Tests.Extensions
             var result = repository.GetList(filterExpression: null);
 
             // Assert
+            Assert.NotNull(id);
             Assert.Equal(list, result);
         }
 
@@ -200,6 +201,7 @@ namespace GodelTech.Data.Tests.Extensions
             var result = repository.GetList<FakeModel, IEntity<TKey>, TKey>(filterExpression: null);
 
             // Assert
+            Assert.NotNull(id);
             Assert.Equal(list, result);
         }
 

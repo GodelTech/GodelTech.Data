@@ -120,6 +120,7 @@ namespace GodelTech.Data.Tests.Extensions
             var result = await repository.ExistsAsync(filterExpression: null, cancellationToken);
 
             // Assert
+            Assert.NotNull(id);
             Assert.True(result);
         }
 

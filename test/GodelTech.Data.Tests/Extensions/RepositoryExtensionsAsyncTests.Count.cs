@@ -80,6 +80,7 @@ namespace GodelTech.Data.Tests.Extensions
             var result = await repository.CountAsync(filterExpression: null, cancellationToken);
 
             // Assert
+            Assert.NotNull(id);
             Assert.Equal(1, result);
         }
 

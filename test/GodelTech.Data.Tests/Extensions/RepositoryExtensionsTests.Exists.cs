@@ -109,6 +109,7 @@ namespace GodelTech.Data.Tests.Extensions
             var result = repository.Exists(filterExpression: null);
 
             // Assert
+            Assert.NotNull(id);
             Assert.True(result);
         }
 

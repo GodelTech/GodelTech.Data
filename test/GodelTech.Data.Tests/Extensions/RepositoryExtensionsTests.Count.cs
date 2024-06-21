@@ -73,6 +73,7 @@ namespace GodelTech.Data.Tests.Extensions
             var result = repository.Count(filterExpression: null);
 
             // Assert
+            Assert.NotNull(id);
             Assert.Equal(1, result);
         }
 
