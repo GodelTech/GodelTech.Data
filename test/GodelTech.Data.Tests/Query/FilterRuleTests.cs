@@ -1,5 +1,4 @@
 ﻿using System;
-using GodelTech.Data.Tests.Extensions;
 using GodelTech.Data.Tests.Fakes;
 using Moq;
 using Xunit;
@@ -9,9 +8,9 @@ namespace GodelTech.Data.Tests.Query
     public class FilterRuleTests
     {
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(TypesTestData.TypesGuidTestData), MemberType = typeof(TypesTestData))]
+        [MemberData(nameof(TypesTestData.TypesIntTestData), MemberType = typeof(TypesTestData))]
+        [MemberData(nameof(TypesTestData.TypesStringTestData), MemberType = typeof(TypesTestData))]
         public void Constructor_WhenSpecificationIsNull_ThrowsArgumentNullException<TKey>(TKey id)
         {
             // Arrange & Act & Assert
@@ -24,9 +23,9 @@ namespace GodelTech.Data.Tests.Query
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(TypesTestData.TypesGuidTestData), MemberType = typeof(TypesTestData))]
+        [MemberData(nameof(TypesTestData.TypesIntTestData), MemberType = typeof(TypesTestData))]
+        [MemberData(nameof(TypesTestData.TypesStringTestData), MemberType = typeof(TypesTestData))]
         public void Constructor<TKey>(TKey id)
         {
             // Arrange
