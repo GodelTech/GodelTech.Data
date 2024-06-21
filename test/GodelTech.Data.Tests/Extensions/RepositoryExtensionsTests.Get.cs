@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq.Expressions;
 using GodelTech.Data.Tests.Fakes;
 using Moq;
-using Neleus.LambdaCompare;
 using Xunit;
 
 namespace GodelTech.Data.Tests.Extensions
@@ -10,30 +8,24 @@ namespace GodelTech.Data.Tests.Extensions
     public partial class RepositoryExtensionsTests
     {
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
         public void Get_ById_ReturnsEntity<TEntity, TKey>(
-            TKey defaultKey,
+            TKey id,
             TEntity entity,
-            object id,
             bool expectedResult)
             where TEntity : class, IEntity<TKey>
         {
             // Arrange
-            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>((TKey) id);
+            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>(id);
 
             var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
 
             mockRepository
                 .Setup(
                     x => x.Get(
-                        It.Is<QueryParameters<TEntity, TKey>>(
-                            y => Lambda.Eq(
-                                     y.Filter.Expression,
-                                     filterExpression
-                                 )
-                                 && y.Sort == null
-                                 && y.Page == null
-                        )
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<TEntity, TKey>(filterExpression)
                     )
                 )
                 .Returns(entity);
@@ -41,14 +33,9 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            var result = repository.Get((TKey) id);
+            var result = repository.Get(id);
 
             // Assert
-            if (id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), id);
-            }
-
             Assert.Equal(
                 expectedResult,
                 filterExpression.Compile().Invoke(entity)
@@ -58,36 +45,36 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void Get_ByFilterExpressionWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Get_ByFilterExpressionWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey id)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
-                () => RepositoryExtensions.Get<IEntity<TKey>, TKey>(null, x => x.Id.Equals(defaultKey))
+                () => RepositoryExtensions.Get<IEntity<TKey>, TKey>(null, x => x.Id.Equals(id))
             );
 
             Assert.Equal("repository", exception.ParamName);
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void Get_ByFilterExpression_ReturnsEntity<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Get_ByFilterExpression_ReturnsEntity<TKey>(TKey id)
         {
             // Arrange
-            var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
+            var entity = new FakeEntity<TKey>();
+
+            var mockRepository = new Mock<IRepository<IEntity<TKey>, TKey>>(MockBehavior.Strict);
+
+            var filterExpression = FilterExpressionExtensionsTests.GetFilterExpression<IEntity<TKey>, TKey>(id);
 
             mockRepository
                 .Setup(
                     x => x.Get(
-                        It.Is<QueryParameters<TEntity, TKey>>(
-                            y => y.Filter.Expression == filterExpression
-                                 && y.Sort == null
-                                 && y.Page == null
-                        )
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<IEntity<TKey>, TKey>(filterExpression)
                     )
                 )
                 .Returns(entity);
@@ -98,24 +85,21 @@ namespace GodelTech.Data.Tests.Extensions
             var result = repository.Get(filterExpression);
 
             // Assert
-            if (entity != null && entity.Id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), entity.Id);
-            }
-
             Assert.Equal(entity, result);
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void Get_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Get_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey id)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
                 () => RepositoryExtensions.Get(
                     null,
                     new FakeSpecification<IEntity<TKey>, TKey>(
-                        x => x.Id.Equals(defaultKey)
+                        x => x.Id.Equals(id)
                     )
                 )
             );
@@ -124,27 +108,24 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void Get_BySpecification_ReturnsEntity<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> expression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void Get_BySpecification_ReturnsEntity<TKey>(TKey id)
         {
             // Arrange
-            var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
+            var entity = new FakeEntity<TKey>();
 
-            var specification = new FakeSpecification<TEntity, TKey>(expression);
+            var mockRepository = new Mock<IRepository<IEntity<TKey>, TKey>>(MockBehavior.Strict);
+
+            var filterExpression = FilterExpressionExtensionsTests.GetFilterExpression<IEntity<TKey>, TKey>(id);
+
+            var specification = new FakeSpecification<IEntity<TKey>, TKey>(filterExpression);
 
             mockRepository
                 .Setup(
                     x => x.Get(
-                        It.Is<QueryParameters<TEntity, TKey>>(
-                            y =>
-                                y.Filter.Expression == expression
-                                && y.Sort == null
-                                && y.Page == null
-                        )
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<IEntity<TKey>, TKey>(filterExpression)
                     )
                 )
                 .Returns(entity);
@@ -155,41 +136,30 @@ namespace GodelTech.Data.Tests.Extensions
             var result = repository.Get(specification);
 
             // Assert
-            if (entity != null && entity.Id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), entity.Id);
-            }
-
             Assert.Equal(entity, result);
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.CreateIdFilterExpressionStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
         public void GetModel_ById_ReturnsModel<TEntity, TKey>(
-            TKey defaultKey,
+            TKey id,
             TEntity entity,
-            object id,
             bool expectedResult)
             where TEntity : class, IEntity<TKey>
         {
             // Arrange
             var model = new FakeModel();
 
-            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>((TKey) id);
+            var filterExpression = FilterExpressionExtensions.CreateIdFilterExpression<TEntity, TKey>(id);
 
             var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
 
             mockRepository
                 .Setup(
                     x => x.Get<FakeModel>(
-                        It.Is<QueryParameters<TEntity, TKey>>(
-                            y => Lambda.Eq(
-                                     y.Filter.Expression,
-                                     filterExpression
-                                 )
-                                 && y.Sort == null
-                                 && y.Page == null
-                        )
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<TEntity, TKey>(filterExpression)
                     )
                 )
                 .Returns(model);
@@ -197,14 +167,9 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            var result = repository.Get<FakeModel, TEntity, TKey>((TKey) id);
+            var result = repository.Get<FakeModel, TEntity, TKey>(id);
 
             // Assert
-            if (id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), id);
-            }
-
             Assert.Equal(
                 expectedResult,
                 filterExpression.Compile().Invoke(entity)
@@ -214,38 +179,36 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void GetModel_ByFilterExpressionWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void GetModel_ByFilterExpressionWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey id)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
-                () => RepositoryExtensions.Get<FakeModel, IEntity<TKey>, TKey>(null, x => x.Id.Equals(defaultKey))
+                () => RepositoryExtensions.Get<FakeModel, IEntity<TKey>, TKey>(null, x => x.Id.Equals(id))
             );
 
             Assert.Equal("repository", exception.ParamName);
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void GetModel_ByFilterExpression_ReturnsModel<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> filterExpression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void GetModel_ByFilterExpression_ReturnsModel<TKey>(TKey id)
         {
             // Arrange
             var model = new FakeModel();
 
-            var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
+            var mockRepository = new Mock<IRepository<IEntity<TKey>, TKey>>(MockBehavior.Strict);
+
+            var filterExpression = FilterExpressionExtensionsTests.GetFilterExpression<IEntity<TKey>, TKey>(id);
 
             mockRepository
                 .Setup(
                     x => x.Get<FakeModel>(
-                        It.Is<QueryParameters<TEntity, TKey>>(
-                            y => y.Filter.Expression == filterExpression
-                                 && y.Sort == null
-                                 && y.Page == null
-                        )
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<IEntity<TKey>, TKey>(filterExpression)
                     )
                 )
                 .Returns(model);
@@ -253,27 +216,24 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            var result = repository.Get<FakeModel, TEntity, TKey>(filterExpression);
+            var result = repository.Get<FakeModel, IEntity<TKey>, TKey>(filterExpression);
 
             // Assert
-            if (entity != null && entity.Id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), entity.Id);
-            }
-
             Assert.Equal(model, result);
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.TypesMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void GetModel_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey defaultKey)
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void GetModel_BySpecificationWhenRepositoryIsNull_ThrowsArgumentNullException<TKey>(TKey id)
         {
             // Arrange & Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
                 () => RepositoryExtensions.Get<FakeModel, IEntity<TKey>, TKey>(
                     null,
                     new FakeSpecification<IEntity<TKey>, TKey>(
-                        x => x.Id.Equals(defaultKey)
+                        x => x.Id.Equals(id)
                     )
                 )
             );
@@ -282,29 +242,24 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(FilterExpressionExtensionsTests.FilterExpressionMemberData), MemberType = typeof(FilterExpressionExtensionsTests))]
-        public void GetModel_BySpecification_ReturnsModel<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> expression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesGuidTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesIntTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        [MemberData(nameof(FilterExpressionExtensionsTests.TypesStringTestData), MemberType = typeof(FilterExpressionExtensionsTests))]
+        public void GetModel_BySpecification_ReturnsModel<TKey>(TKey id)
         {
             // Arrange
             var model = new FakeModel();
 
-            var mockRepository = new Mock<IRepository<TEntity, TKey>>(MockBehavior.Strict);
+            var mockRepository = new Mock<IRepository<IEntity<TKey>, TKey>>(MockBehavior.Strict);
 
-            var specification = new FakeSpecification<TEntity, TKey>(expression);
+            var filterExpression = FilterExpressionExtensionsTests.GetFilterExpression<IEntity<TKey>, TKey>(id);
+
+            var specification = new FakeSpecification<IEntity<TKey>, TKey>(filterExpression);
 
             mockRepository
                 .Setup(
                     x => x.Get<FakeModel>(
-                        It.Is<QueryParameters<TEntity, TKey>>(
-                            y =>
-                                y.Filter.Expression == expression
-                                && y.Sort == null
-                                && y.Page == null
-                        )
+                        FilterExpressionExtensionsTests.GetMatchingQueryParameters<IEntity<TKey>, TKey>(filterExpression)
                     )
                 )
                 .Returns(model);
@@ -312,14 +267,9 @@ namespace GodelTech.Data.Tests.Extensions
             var repository = mockRepository.Object;
 
             // Act
-            var result = repository.Get<FakeModel, TEntity, TKey>(specification);
+            var result = repository.Get<FakeModel, IEntity<TKey>, TKey>(specification);
 
             // Assert
-            if (entity != null && entity.Id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), entity.Id);
-            }
-
             Assert.Equal(model, result);
         }
     }

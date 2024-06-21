@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using Xunit;
 
 namespace GodelTech.Data.Tests.Exceptions
@@ -9,23 +7,20 @@ namespace GodelTech.Data.Tests.Exceptions
     {
         private static readonly ArgumentNullException InnerException = new ArgumentNullException();
 
-        public static IEnumerable<object[]> ConstructorMemberData =>
-            new Collection<object[]>
+        public static TheoryData<DataStorageException, string, Exception> ConstructorTestData =>
+            new TheoryData<DataStorageException, string, Exception>
             {
-                new object[] { null, null, null },
-                new object[]
+                { null, null, null },
                 {
                     new DataStorageException(),
                     $"Exception of type '{typeof(DataStorageException)}' was thrown.",
                     null
                 },
-                new object[]
                 {
                     new DataStorageException("Test Message"),
                     "Test Message",
                     null
                 },
-                new object[]
                 {
                     new DataStorageException("Test Message", InnerException),
                     "Test Message",
@@ -34,7 +29,7 @@ namespace GodelTech.Data.Tests.Exceptions
             };
 
         [Theory]
-        [MemberData(nameof(ConstructorMemberData))]
+        [MemberData(nameof(ConstructorTestData))]
         public void Constructor(
             DataStorageException item,
             string expectedMessage,
