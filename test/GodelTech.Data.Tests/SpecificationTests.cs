@@ -110,6 +110,8 @@ namespace GodelTech.Data.Tests
 
         [Theory]
         [MemberData(nameof(SpecificationBaseTests.SpecificationGuidTestData), MemberType = typeof(SpecificationBaseTests))]
+        [MemberData(nameof(SpecificationBaseTests.SpecificationIntTestData), MemberType = typeof(SpecificationBaseTests))]
+        [MemberData(nameof(SpecificationBaseTests.SpecificationStringTestData), MemberType = typeof(SpecificationBaseTests))]
         public void And_Success<TKey, TSpecificationTestDataModel>(
             TKey id,
             TSpecificationTestDataModel model)
@@ -125,6 +127,8 @@ namespace GodelTech.Data.Tests
 
         [Theory]
         [MemberData(nameof(SpecificationBaseTests.SpecificationGuidTestData), MemberType = typeof(SpecificationBaseTests))]
+        [MemberData(nameof(SpecificationBaseTests.SpecificationIntTestData), MemberType = typeof(SpecificationBaseTests))]
+        [MemberData(nameof(SpecificationBaseTests.SpecificationStringTestData), MemberType = typeof(SpecificationBaseTests))]
         public void AndNot_Success<TKey, TSpecificationTestDataModel>(
             TKey id,
             TSpecificationTestDataModel model)
@@ -140,6 +144,8 @@ namespace GodelTech.Data.Tests
 
         [Theory]
         [MemberData(nameof(SpecificationBaseTests.SpecificationGuidTestData), MemberType = typeof(SpecificationBaseTests))]
+        [MemberData(nameof(SpecificationBaseTests.SpecificationIntTestData), MemberType = typeof(SpecificationBaseTests))]
+        [MemberData(nameof(SpecificationBaseTests.SpecificationStringTestData), MemberType = typeof(SpecificationBaseTests))]
         public void Or_Success<TKey, TSpecificationTestDataModel>(
             TKey id,
             TSpecificationTestDataModel model)
@@ -155,6 +161,8 @@ namespace GodelTech.Data.Tests
 
         [Theory]
         [MemberData(nameof(SpecificationBaseTests.SpecificationGuidTestData), MemberType = typeof(SpecificationBaseTests))]
+        [MemberData(nameof(SpecificationBaseTests.SpecificationIntTestData), MemberType = typeof(SpecificationBaseTests))]
+        [MemberData(nameof(SpecificationBaseTests.SpecificationStringTestData), MemberType = typeof(SpecificationBaseTests))]
         public void OrNot_Success<TKey, TSpecificationTestDataModel>(
             TKey id,
             TSpecificationTestDataModel model)
@@ -170,6 +178,8 @@ namespace GodelTech.Data.Tests
 
         [Theory]
         [MemberData(nameof(SpecificationBaseTests.SpecificationGuidTestData), MemberType = typeof(SpecificationBaseTests))]
+        [MemberData(nameof(SpecificationBaseTests.SpecificationIntTestData), MemberType = typeof(SpecificationBaseTests))]
+        [MemberData(nameof(SpecificationBaseTests.SpecificationStringTestData), MemberType = typeof(SpecificationBaseTests))]
         public void Not_Success<TKey, TSpecificationTestDataModel>(
             TKey id,
             TSpecificationTestDataModel model)
