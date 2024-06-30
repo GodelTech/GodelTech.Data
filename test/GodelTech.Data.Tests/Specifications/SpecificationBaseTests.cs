@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq.Expressions;
 using GodelTech.Data.Tests.Fakes;
+using GodelTech.Data.Tests.TestData;
 using Moq;
 using Xunit;
 
@@ -17,182 +15,209 @@ namespace GodelTech.Data.Tests.Specifications
             Specification<TEntity, TKey> right)
             where TEntity : class, IEntity<TKey>;
 
-        public static IEnumerable<object[]> MemberData =>
-            new Collection<object[]>
+        public static TheoryData<Guid, SpecificationTestDataModel<Guid>> SpecificationGuidTestData =>
+            new TheoryData<Guid, SpecificationTestDataModel<Guid>>
             {
-                // Guid
-                new object[]
                 {
-                    default(Guid),
-                    new FakeEntity<Guid>
+                    default,
+                    new SpecificationTestDataModel<Guid>
                     {
-                        Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000001")),
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Name == "TestName")
+                        Entity = new FakeEntity<Guid>
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            Name = "TestName"
+                        },
+                        LeftExpression = entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000001"),
+                        RightExpression = entity => entity.Name == "TestName"
+                    }
                 },
-                new object[]
                 {
-                    default(Guid),
-                    new FakeEntity<Guid>
+                    default,
+                    new SpecificationTestDataModel<Guid>
                     {
-                        Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000001")),
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Name == "Other TestName")
+                        Entity = new FakeEntity<Guid>
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            Name = "TestName"
+                        },
+                        LeftExpression = entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000001"),
+                        RightExpression = entity => entity.Name == "Other TestName"
+                    }
                 },
-                new object[]
                 {
-                    default(Guid),
-                    new FakeEntity<Guid>
+                    default,
+                    new SpecificationTestDataModel<Guid>
                     {
-                        Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000002")),
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Name == "TestName")
+                        Entity = new FakeEntity<Guid>
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            Name = "TestName"
+                        },
+                        LeftExpression = entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000002"),
+                        RightExpression = entity => entity.Name == "TestName"
+                    }
                 },
-                new object[]
                 {
-                    default(Guid),
-                    new FakeEntity<Guid>
+                    default,
+                    new SpecificationTestDataModel<Guid>
                     {
-                        Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000002")),
-                    (Expression<Func<FakeEntity<Guid>, bool>>) (entity => entity.Name == "Other TestName")
-                },
-                // int
-                new object[]
+                        Entity = new FakeEntity<Guid>
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            Name = "TestName"
+                        },
+                        LeftExpression = entity => entity.Id == new Guid("00000000-0000-0000-0000-000000000002"),
+                        RightExpression = entity => entity.Name == "Other TestName"
+                    }
+                }
+            };
+
+        public static TheoryData<int, SpecificationTestDataModel<int>> SpecificationIntTestData =>
+            new TheoryData<int, SpecificationTestDataModel<int>>
+            {
                 {
-                    default(int),
-                    new FakeEntity<int>
+                    default,
+                    new SpecificationTestDataModel<int>
                     {
-                        Id = 1,
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Id == 1),
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Name == "TestName")
+                        Entity = new FakeEntity<int>
+                        {
+                            Id = 1,
+                            Name = "TestName"
+                        },
+                        LeftExpression = entity => entity.Id == 1,
+                        RightExpression = entity => entity.Name == "TestName"
+                    }
                 },
-                new object[]
                 {
-                    default(int),
-                    new FakeEntity<int>
+                    default,
+                    new SpecificationTestDataModel<int>
                     {
-                        Id = 1,
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Id == 1),
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Name == "Other TestName")
+                        Entity = new FakeEntity<int>
+                        {
+                            Id = 1,
+                            Name = "TestName"
+                        },
+                        LeftExpression = entity => entity.Id == 1,
+                        RightExpression = entity => entity.Name == "Other TestName"
+                    }
                 },
-                new object[]
                 {
-                    default(int),
-                    new FakeEntity<int>
+                    default,
+                    new SpecificationTestDataModel<int>
                     {
-                        Id = 1,
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Id == 2),
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Name == "TestName")
+                        Entity = new FakeEntity<int>
+                        {
+                            Id = 1,
+                            Name = "TestName"
+                        },
+                        LeftExpression = entity => entity.Id == 2,
+                        RightExpression = entity => entity.Name == "TestName"
+                    }
                 },
-                new object[]
                 {
-                    default(int),
-                    new FakeEntity<int>
+                    default,
+                    new SpecificationTestDataModel<int>
                     {
-                        Id = 1,
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Id == 2),
-                    (Expression<Func<FakeEntity<int>, bool>>) (entity => entity.Name == "Other TestName")
-                },
-                // string
-                new object[]
+                        Entity = new FakeEntity<int>
+                        {
+                            Id = 1,
+                            Name = "TestName"
+                        },
+                        LeftExpression = entity => entity.Id == 2,
+                        RightExpression = entity => entity.Name == "Other TestName"
+                    }
+                }
+            };
+
+        public static TheoryData<string, SpecificationTestDataModel<string>> SpecificationStringTestData =>
+            new TheoryData<string, SpecificationTestDataModel<string>>
+            {
                 {
                     string.Empty,
-                    new FakeEntity<string>
+                    new SpecificationTestDataModel<string>
                     {
-                        Id = "TestId",
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Id == "TestId"),
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Name == "TestName")
+                        Entity = new FakeEntity<string>
+                        {
+                            Id = "TestId",
+                            Name = "TestName"
+                        },
+                        LeftExpression = entity => entity.Id == "TestId",
+                        RightExpression = entity => entity.Name == "TestName"
+                    }
                 },
-                new object[]
                 {
                     string.Empty,
-                    new FakeEntity<string>
+                    new SpecificationTestDataModel<string>
                     {
-                        Id = "TestId",
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Id == "TestId"),
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Name == "Other TestName")
+                        Entity = new FakeEntity<string>
+                        {
+                            Id = "TestId",
+                            Name = "TestName"
+                        },
+                        LeftExpression = entity => entity.Id == "TestId",
+                        RightExpression = entity => entity.Name == "Other TestName"
+                    }
                 },
-                new object[]
                 {
                     string.Empty,
-                    new FakeEntity<string>
+                    new SpecificationTestDataModel<string>
                     {
-                        Id = "TestId",
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Id == "OtherTestId"),
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Name == "TestName")
+                        Entity = new FakeEntity<string>
+                        {
+                            Id = "TestId",
+                            Name = "TestName"
+                        },
+                        LeftExpression = entity => entity.Id == "OtherTestId",
+                        RightExpression = entity => entity.Name == "TestName"
+                    }
                 },
-                new object[]
                 {
                     string.Empty,
-                    new FakeEntity<string>
+                    new SpecificationTestDataModel<string>
                     {
-                        Id = "TestId",
-                        Name = "TestName"
-                    },
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Id == "OtherTestId"),
-                    (Expression<Func<FakeEntity<string>, bool>>) (entity => entity.Name == "Other TestName")
+                        Entity = new FakeEntity<string>
+                        {
+                            Id = "TestId",
+                            Name = "TestName"
+                        },
+                        LeftExpression = entity => entity.Id == "OtherTestId",
+                        RightExpression = entity => entity.Name == "Other TestName"
+                    }
                 }
             };
 
         [Theory]
-        [MemberData(nameof(MemberData))]
-        public void AsExpression_Success<TEntity, TKey>(
-            TKey defaultKey,
-            TEntity entity,
-            Expression<Func<TEntity, bool>> leftExpression,
-            Expression<Func<TEntity, bool>> rightExpression)
-            where TEntity : class, IEntity<TKey>
+        [MemberData(nameof(SpecificationGuidTestData))]
+        [MemberData(nameof(SpecificationIntTestData))]
+        [MemberData(nameof(SpecificationStringTestData))]
+        public void AsExpression_Success<TKey, TSpecificationTestDataModel>(
+            TKey id,
+            TSpecificationTestDataModel model)
+            where TSpecificationTestDataModel : SpecificationTestDataModel<TKey>
         {
             // Arrange
-            var leftSpecification = new Mock<Specification<TEntity, TKey>>(MockBehavior.Strict);
+            var leftSpecification = new Mock<Specification<FakeEntity<TKey>, TKey>>(MockBehavior.Strict);
             leftSpecification
                 .Setup(x => x.AsExpression())
-                .Returns(leftExpression);
+                .Returns(model.LeftExpression);
 
-            var rightSpecification = new Mock<Specification<TEntity, TKey>>(MockBehavior.Strict);
+            var rightSpecification = new Mock<Specification<FakeEntity<TKey>, TKey>>(MockBehavior.Strict);
             rightSpecification
                 .Setup(x => x.AsExpression())
-                .Returns(rightExpression);
+                .Returns(model.RightExpression);
 
             // Act
             var result = CreateSpecification(leftSpecification.Object, rightSpecification.Object).AsExpression();
 
             // Assert
-            if (entity != null && entity.Id != null)
-            {
-                Assert.IsType(defaultKey.GetType(), entity.Id);
-            }
-
+            Assert.NotNull(id);
             Assert.Equal(
                 Func
                     .Invoke(
-                        leftExpression.Compile().Invoke(entity),
-                        rightExpression.Compile().Invoke(entity)
+                        model.LeftExpression.Compile().Invoke(model.Entity),
+                        model.RightExpression.Compile().Invoke(model.Entity)
                     ),
-                result.Compile().Invoke(entity)
+                result.Compile().Invoke(model.Entity)
             );
         }
     }

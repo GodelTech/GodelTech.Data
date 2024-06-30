@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using GodelTech.Data.Tests.Fakes;
+using GodelTech.Data.Tests.TestData;
 using Moq;
 using Neleus.LambdaCompare;
 using Xunit;
@@ -158,28 +159,10 @@ namespace GodelTech.Data.Tests.Extensions
             );
         }
 
-        public static TheoryData<Guid> TypesGuidTestData =>
-            new TheoryData<Guid>
-            {
-                default
-            };
-
-        public static TheoryData<int> TypesIntTestData =>
-            new TheoryData<int>
-            {
-                default
-            };
-
-        public static TheoryData<string> TypesStringTestData =>
-            new TheoryData<string>
-            {
-                string.Empty
-            };
-
         [Theory]
-        [MemberData(nameof(TypesGuidTestData))]
-        [MemberData(nameof(TypesIntTestData))]
-        [MemberData(nameof(TypesStringTestData))]
+        [MemberData(nameof(TypesTestData.TypesGuidTestData), MemberType = typeof(TypesTestData))]
+        [MemberData(nameof(TypesTestData.TypesIntTestData), MemberType = typeof(TypesTestData))]
+        [MemberData(nameof(TypesTestData.TypesStringTestData), MemberType = typeof(TypesTestData))]
         public void CreateQueryParameters_WhenFilterExpressionIsNull_ThrowsArgumentNullException<TKey>(TKey id)
         {
             // Arrange & Act & Assert
@@ -192,9 +175,9 @@ namespace GodelTech.Data.Tests.Extensions
         }
 
         [Theory]
-        [MemberData(nameof(TypesGuidTestData))]
-        [MemberData(nameof(TypesIntTestData))]
-        [MemberData(nameof(TypesStringTestData))]
+        [MemberData(nameof(TypesTestData.TypesGuidTestData), MemberType = typeof(TypesTestData))]
+        [MemberData(nameof(TypesTestData.TypesIntTestData), MemberType = typeof(TypesTestData))]
+        [MemberData(nameof(TypesTestData.TypesStringTestData), MemberType = typeof(TypesTestData))]
         public void CreateQueryParameters_ReturnsQueryParameters<TKey>(TKey id)
         {
             // Arrange

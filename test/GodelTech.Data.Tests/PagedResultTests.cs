@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using FluentAssertions;
 using GodelTech.Data.Tests.Fakes;
@@ -9,10 +8,9 @@ namespace GodelTech.Data.Tests
 {
     public class PagedResultTests
     {
-        public static IEnumerable<object[]> ConstructorMemberData =>
-            new Collection<object[]>
+        public static TheoryData<PagedResult<FakeModel>, int, int, Collection<FakeModel>, int> ConstructorTestData =>
+            new TheoryData<PagedResult<FakeModel>, int, int, Collection<FakeModel>, int>
             {
-                new object[]
                 {
                     new PagedResult<FakeModel>(
                         0,
@@ -25,7 +23,6 @@ namespace GodelTech.Data.Tests
                     new Collection<FakeModel>(),
                     0
                 },
-                new object[]
                 {
                     new PagedResult<FakeModel>(
                         1,
@@ -50,7 +47,6 @@ namespace GodelTech.Data.Tests
                     },
                     3
                 },
-                new object[]
                 {
                     new PagedResult<FakeModel>(
                         new PageRule(),
@@ -62,7 +58,6 @@ namespace GodelTech.Data.Tests
                     new Collection<FakeModel>(),
                     0
                 },
-                new object[]
                 {
                     new PagedResult<FakeModel>(
                         new PageRule
@@ -93,7 +88,7 @@ namespace GodelTech.Data.Tests
             };
 
         [Theory]
-        [MemberData(nameof(ConstructorMemberData))]
+        [MemberData(nameof(ConstructorTestData))]
         public void Constructor(
             PagedResult<FakeModel> item,
             int expectedPageIndex,

@@ -1,20 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Xunit;
+﻿using Xunit;
 
 namespace GodelTech.Data.Tests.Query
 {
     public class PageRuleTests
     {
-        public static IEnumerable<object[]> IsValidMemberData =>
-            new Collection<object[]>
+        public static TheoryData<PageRule, bool> IsValidTestData =>
+            new TheoryData<PageRule, bool>
             {
-                new object[]
                 {
                     new PageRule(),
                     false
                 },
-                new object[]
                 {
                     new PageRule
                     {
@@ -22,7 +18,6 @@ namespace GodelTech.Data.Tests.Query
                     },
                     false
                 },
-                new object[]
                 {
                     new PageRule
                     {
@@ -30,7 +25,6 @@ namespace GodelTech.Data.Tests.Query
                     },
                     false
                 },
-                new object[]
                 {
                     new PageRule
                     {
@@ -39,7 +33,6 @@ namespace GodelTech.Data.Tests.Query
                     },
                     false
                 },
-                new object[]
                 {
                     new PageRule
                     {
@@ -47,7 +40,6 @@ namespace GodelTech.Data.Tests.Query
                     },
                     false
                 },
-                new object[]
                 {
                     new PageRule
                     {
@@ -55,7 +47,6 @@ namespace GodelTech.Data.Tests.Query
                     },
                     true
                 },
-                new object[]
                 {
                     new PageRule
                     {
@@ -67,7 +58,7 @@ namespace GodelTech.Data.Tests.Query
             };
 
         [Theory]
-        [MemberData(nameof(IsValidMemberData))]
+        [MemberData(nameof(IsValidTestData))]
         public void IsValid_Success(
             PageRule pageRule,
             bool expectedResult)
