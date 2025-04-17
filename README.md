@@ -1,6 +1,7 @@
 # GodelTech.Data
 
-.NET library to access data storage with Unit of Work, Repository and Entity classes
+## Description
+GodelTech.Data is a .NET library designed to facilitate access to data storage using the Unit of Work, Repository, and Entity design patterns. It provides interfaces for implementing these patterns and includes support for Entity Framework Core through the [GodelTech.Data.EntityFrameworkCore](https://github.com/GodelTech/GodelTech.Data.EntityFrameworkCore) library.
 
 ## Overview
 
@@ -55,3 +56,6 @@ public abstract class SpecificationBase<TEntity, TKey> : CompositeSpecification<
 [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/GodelTech.Data?style=flat-square)](https://www.nuget.org/packages/GodelTech.Data)
 [![Nuget](https://img.shields.io/nuget/dt/GodelTech.Data?style=flat-square)](https://www.nuget.org/packages/GodelTech.Data)
 [![Libraries.io dependency status for specific release](https://img.shields.io/librariesio/release/NuGet/GodelTech.Data/latest?style=flat-square)](https://libraries.io/NuGet/GodelTech.Data)
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for more details.
